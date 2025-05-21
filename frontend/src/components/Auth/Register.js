@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { registerUser } from '../../services/api';
-import { useHistory } from 'react-router-dom';
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -17,67 +17,120 @@ const Register = () => {
   const [error, setError] = useState('');
   const history = useHistory();
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleRoleChange = (e) => {
-    setForm({ ...form, role: e.target.value });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    let data = {
-      nom: form.nom,
-      prenom: form.prenom,
-      email: form.email,
-      motdepasse: form.motdepasse,
-      role: form.role
-    };
-    if (form.role === 'etudiant') {
-      data.niveau = form.niveau;
-      data.filiere = form.filiere;
-    }
-    if (form.role === 'entreprise') {
-      data.secteur = form.secteur;
-      data.adresse = form.adresse;
-      // Ajoute d'autres champs requis si besoin
-    }
     try {
-      await registerUser(data);
-      history.push('/login');
+      await registerUser(form);
+      history.push('/');
     } catch (err) {
       setError(err.response?.data?.message || "Erreur lors de l'inscription");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="nom" placeholder="Nom" value={form.nom} onChange={handleChange} required />
-      <input name="prenom" placeholder="Prénom" value={form.prenom} onChange={handleChange} required />
-      <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-      <input name="motdepasse" type="password" placeholder="Mot de passe" value={form.motdepasse} onChange={handleChange} required />
-      <select name="role" value={form.role} onChange={handleRoleChange}>
-        <option value="etudiant">Étudiant</option>
-        <option value="entreprise">Entreprise</option>
-      </select>
-      {form.role === 'etudiant' && (
-        <>
-          <input name="niveau" placeholder="Niveau" value={form.niveau} onChange={handleChange} required />
-          <input name="filiere" placeholder="Filière" value={form.filiere} onChange={handleChange} required />
-        </>
-      )}
-      {form.role === 'entreprise' && (
-        <>
-          <input name="secteur" placeholder="Secteur" value={form.secteur} onChange={handleChange} required />
-          <input name="adresse" placeholder="Adresse" value={form.adresse} onChange={handleChange} required />
-          {/* Ajoute d'autres champs requis ici si besoin */}
-        </>
-      )}
-      <button type="submit">Inscription</button>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-    </form>
+    <div className="auth-container">
+      <div className="auth-card register-card">
+        <h2>Créer un compte InternMatch</h2>
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-grid">
+            <div className="form-group">
+              <label className="form-label">Nom</label>
+              <input 
+                className="form-control"
+                name="nom"
+                value={form.nom}
+                onChange={e => setForm({...form, nom: e.target.value})}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Prénom</label>
+              <input 
+                className="form-control"
+                name="prenom"
+                value={form.prenom}
+                onChange={e => setForm({...form, prenom: e.target.value})}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Email</label>
+            <input 
+              className="form-control"
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={e => setForm({...form, email: e.target.value})}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Mot de passe</label>
+            <input 
+              className="form-control"
+              type="password"
+              name="motdepasse"
+              value={form.motdepasse}
+              onChange={e => setForm({...form, motdepasse: e.target.value})}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Type de compte</label>
+            <select 
+              className="form-control"
+              value={form.role}
+              onChange={e => setForm({...form, role: e.target.value})}
+            >
+              <option value="etudiant">Étudiant</option>
+              <option value="entreprise">Entreprise</option>
+            </select>
+          </div>
+
+          {form.role === 'etudiant' && (
+            <div className="form-grid">
+              <div className="form-group">
+                <label className="form-label">Niveau</label>
+                <input 
+                  className="form-control"
+                  name="niveau"
+                  value={form.niveau}
+                  onChange={e => setForm({...form, niveau: e.target.value})}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Filière</label>
+                <input 
+                  className="form-control"
+                  name="filiere"
+                  value={form.filiere}
+                  onChange={e => setForm({...form, filiere: e.target.value})}
+                  required
+                />
+              </div>
+            </div>
+          )}
+
+          {error && <div className="error-message">{error}</div>}
+
+          <button type="submit" className="btn btn-primary btn-block">
+            S'inscrire
+          </button>
+
+          <div className="auth-footer">
+            <p>Déjà membre ?</p>
+            <Link to="/" className="btn btn-secondary">
+              Se connecter
+            </Link>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

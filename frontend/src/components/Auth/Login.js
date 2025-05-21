@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom'; // Add Link import
 import { loginUser } from '../../services/api';
-import { useHistory } from 'react-router-dom';
 
 const Login = () => {
   const [form, setForm] = useState({ email: '', motdepasse: '' });
@@ -16,28 +16,71 @@ const Login = () => {
     setError('');
     try {
       const response = await loginUser(form);
-      // Store token and user info
-      localStorage.setItem('token', response.accessToken);
+      const userData = response.data;
+      
       localStorage.setItem('user', JSON.stringify({
-        id: response.id,
-        nom: response.nom,
-        prenom: response.prenom,
-        email: response.email,
-        role: response.role
+        id: userData.id,
+        nom: userData.nom,
+        prenom: userData.prenom,
+        email: userData.email,
+        role: userData.role
       }));
-      history.push('/dashboard');
+      
+      if (userData.accessToken) {
+        localStorage.setItem('token', userData.accessToken);
+      }
+
+      window.location.href = '/dashboard';
     } catch (err) {
-      setError(err.response?.data?.message || "Erreur lors de la connexion");
+      console.error('Login error:', err);
+      setError(err.response?.data?.message || "Email ou mot de passe incorrect");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-      <input name="motdepasse" type="password" placeholder="Mot de passe" value={form.motdepasse} onChange={handleChange} required />
-      <button type="submit">Connexion</button>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-    </form>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2>Connexion à InternMatch</h2>
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label className="form-label">Email</label>
+            <input 
+              className="form-control"
+              name="email" 
+              type="email" 
+              value={form.email} 
+              onChange={handleChange} 
+              required 
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Mot de passe</label>
+            <input 
+              className="form-control"
+              name="motdepasse" 
+              type="password" 
+              value={form.motdepasse} 
+              onChange={handleChange} 
+              required 
+            />
+          </div>
+
+          {error && <div className="error-message">{error}</div>}
+
+          <button type="submit" className="btn btn-primary btn-block">
+            Connexion
+          </button>
+
+          <div className="auth-footer">
+            <p>Pas encore membre ?</p>
+            <Link to="/register" className="btn btn-secondary">
+              Créer un compte
+            </Link>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

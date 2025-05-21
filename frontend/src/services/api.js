@@ -18,8 +18,17 @@ api.interceptors.request.use((config) => {
 
 // Auth
 export const registerUser = (data) => api.post('/auth/register', data);
-export const loginUser = (data) => api.post('/auth/login', data);
-
+export const loginUser = async (credentials) => {
+  try {
+    const response = await api.post('/auth/login', credentials);
+    // Log the response for debugging
+    console.log('API Response:', response);
+    return response;
+  } catch (error) {
+    console.error('API Error:', error);
+    throw error;
+  }
+};
 // Etudiant
 export const getEtudiantProfile = () => api.get('/etudiant/profile');
 export const updateEtudiantProfile = (data) => api.put('/etudiant/profile', data);

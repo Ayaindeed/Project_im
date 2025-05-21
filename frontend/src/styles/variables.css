@@ -1,0 +1,26 @@
+:root {
+  /* Brand Colors */
+  --primary-purple: #a559a3;
+  --primary-pink: #d24896;
+  --primary-deep-purple: #964094;
+  --primary-blue: #4c489e;
+
+  /* UI Colors */
+  --background: #f8f9fc;
+  --surface: #ffffff;
+  --text-primary: #2d3748;
+  --text-secondary: #4a5568;
+  --text-light: #718096;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--primary-purple), var(--primary-pink));
+  --gradient-secondary: linear-gradient(135deg, var(--primary-deep-purple), var(--primary-blue));
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  
+  /* Transitions */
+  --transition-base: all 0.3s ease;
+}

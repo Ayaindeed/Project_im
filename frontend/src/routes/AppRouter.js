@@ -1,34 +1,88 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import Login from '../components/Auth/Login';
 import Register from '../components/Auth/Register';
 import Dashboard from '../pages/Dashboard';
-import InternshipList from '../pages/InternshipList';
-import SubmitStage from '../pages/SubmitStage';
-import MyCandidatures from '../pages/MyCandidatures';
-import EntrepriseCandidatures from '../pages/EntrepriseCandidatures';
-import AdminUsers from '../pages/AdminUsers';
-import AdminStats from '../pages/AdminStats';
 import NavBar from '../components/NavBar';
-import ProtectedRoute from './ProtectedRoute';
 
-const AppRouter = () => (
+const AppRouter = () => {
+  const [auth, setAuth] = useState({
+    isAuthenticated: false,
+    user: null,
+    loading: true
+  });
+
+  useEffect(() => {
+    try {
+      const userStr = localStorage.getItem('user');
+      const token = localStorage.getItem('token');
+
+      if (userStr && token) {
+        try {
+          const user = JSON.parse(userStr);
+          setAuth({
+            isAuthenticated: true,
+            user,
+            loading: false
+          });
+        } catch (parseError) {
+          console.error('Failed to parse user data:', parseError);
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+          setAuth({
+            isAuthenticated: false,
+            user: null,
+            loading: false
+          });
+        }
+      } else {
+        setAuth({
+          isAuthenticated: false,
+          user: null,
+          loading: false
+        });
+      }
+    } catch (error) {
+      console.error('Auth state error:', error);
+      setAuth({
+        isAuthenticated: false,
+        user: null,
+        loading: false
+      });
+    }
+  }, []);
+
+  if (auth.loading) {
+    return <div className="loading">Chargement...</div>;
+  }
+
+  return (
     <>
-        <NavBar />
-        <div className="container">
-            <Switch>
-                <Route path="/" exact component={Login} />
-                <Route path="/register" component={Register} />
-                <ProtectedRoute path="/dashboard" component={Dashboard} />
-                <Route path="/internships" component={InternshipList} />
-                <ProtectedRoute path="/submit-stage" component={SubmitStage} />
-                <ProtectedRoute path="/my-candidatures" component={MyCandidatures} />
-                <ProtectedRoute path="/entreprise-candidatures" component={EntrepriseCandidatures} />
-                <ProtectedRoute path="/admin-users" component={AdminUsers} />
-                <ProtectedRoute path="/admin-stats" component={AdminStats} />
-            </Switch>
-        </div>
+      <NavBar isAuthenticated={auth.isAuthenticated} user={auth.user} />
+      <div className="main-content">
+        <Switch>
+          <Route exact path="/">
+            {auth.isAuthenticated ? (
+              <Redirect to="/dashboard" />
+            ) : (
+              <Login />
+            )}
+          </Route>
+          <Route path="/register" component={Register} />
+          <Route 
+            path="/dashboard"
+            render={props => 
+              auth.isAuthenticated ? (
+                <Dashboard {...props} />
+              ) : (
+                <Redirect to="/" />
+              )
+            }
+          />
+        </Switch>
+      </div>
     </>
-);
+  );
+};
 
 export default AppRouter;
