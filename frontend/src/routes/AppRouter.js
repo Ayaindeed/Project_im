@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import Home from '../pages/Home';
 import Login from '../components/Auth/Login';
 import Register from '../components/Auth/Register';
 import Dashboard from '../pages/Dashboard';
+import EntrepriseDashboard from '../pages/EntrepriseDashboard';
 import NavBar from '../components/NavBar';
 
 const AppRouter = () => {
@@ -61,21 +63,26 @@ const AppRouter = () => {
       <NavBar isAuthenticated={auth.isAuthenticated} user={auth.user} />
       <div className="main-content">
         <Switch>
-          <Route exact path="/">
-            {auth.isAuthenticated ? (
-              <Redirect to="/dashboard" />
-            ) : (
-              <Login />
-            )}
-          </Route>
+          <Route exact path="/" component={Home} />
+          <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route 
             path="/dashboard"
             render={props => 
-              auth.isAuthenticated ? (
+              auth.isAuthenticated && auth.user?.role === 'etudiant' ? (
                 <Dashboard {...props} />
               ) : (
-                <Redirect to="/" />
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route 
+            path="/entreprise-dashboard"
+            render={props => 
+              auth.isAuthenticated && auth.user?.role === 'entreprise' ? (
+                <EntrepriseDashboard {...props} />
+              ) : (
+                <Redirect to="/login" />
               )
             }
           />

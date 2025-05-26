@@ -44,6 +44,10 @@ export const createStage = (data) => api.post('/entreprise/stages', data);
 export const updateStage = (id, data) => api.put(`/entreprise/stages/${id}`, data);
 export const getStageCandidatures = (stageId) => api.get(`/entreprise/stages/${stageId}/candidatures`);
 export const traiterCandidature = (data) => api.post('/entreprise/candidatures/traiter', data);
+export const getEntrepriseStats = async () => {
+  const response = await api.get('/entreprise/stats');
+  return response.data;
+};
 
 // Admin
 export const getAllUsers = () => api.get('/admin/users');

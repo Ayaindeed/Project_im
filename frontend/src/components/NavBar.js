@@ -46,7 +46,7 @@ const NavBar = ({ isAuthenticated, user }) => {
         ) : (
           <div className="nav-right">
             <Link to="/register" className="btn btn-secondary">S'inscrire</Link>
-            <Link to="/" className="btn btn-primary">Se connecter</Link>
+            <Link to="/login" className="btn btn-primary">Se connecter</Link>
           </div>
         )}
       </div>
