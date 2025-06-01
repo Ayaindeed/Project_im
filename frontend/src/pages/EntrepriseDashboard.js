@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getEntrepriseStats } from '../services/api';
+import { getEntrepriseStats } from '../services/entrepriseService';
 
 const EntrepriseDashboard = () => {
   const [stats, setStats] = useState({

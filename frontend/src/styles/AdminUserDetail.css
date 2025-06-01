@@ -1,0 +1,122 @@
+.admin-user-detail {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.admin-user-detail h2 {
+    color: #333;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #337ab7;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.user-info-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.user-info-card h3 {
+    margin-top: 0;
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.etudiant-details, .entreprise-details {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.etudiant-details h3, .entreprise-details h3 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.etudiant-details h4, .entreprise-details h4 {
+    color: #666;
+    margin: 20px 0 10px;
+    font-size: 1.1em;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.candidatures-list, .stages-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.candidature-item, .stage-item {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.candidature-item p, .stage-item p {
+    margin: 5px 0;
+    font-size: 0.95em;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.status-en_attente {
+    background-color: #fcf8e3;
+    color: #8a6d3b;
+}
+
+.status-validé, .status-accepté {
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+
+.status-refusé {
+    background-color: #f2dede;
+    color: #a94442;
+}
+
+.status-disponible {
+    background-color: #d9edf7;
+    color: #31708f;
+}
+
+.error-message {
+    background-color: #f2dede;
+    color: #a94442;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+}

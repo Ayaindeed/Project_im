@@ -13,21 +13,16 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.TEXT,
       allowNull: false
     },
-    dateDebut: {
+    dateDebut: {  // Sans accent
       type: Sequelize.DATE,
       allowNull: false
     },
     dateFin: {
       type: Sequelize.DATE,
       allowNull: false
-    },
-    status: {
-      type: Sequelize.ENUM('disponible', 'pourvu', 'terminé', 'annulé'),
+    },status: {
+      type: Sequelize.ENUM('disponible', 'en_cours', 'termine'),
       defaultValue: 'disponible'
-    },
-    commentaire: {
-      type: Sequelize.TEXT,
-      allowNull: true
     },
     entrepriseId: {
       type: Sequelize.INTEGER,
@@ -36,6 +31,9 @@ module.exports = (sequelize, Sequelize) => {
         model: 'entreprises',
         key: 'id'
       }
+    },    commentaire: {
+      type: Sequelize.TEXT,
+      allowNull: true
     }
   });
 

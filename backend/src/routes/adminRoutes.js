@@ -1,12 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const adminController = require('../controllers/adminController');
-const { verifyToken, authorize } = require('../middleware/authJWT');
+const adminController = require('../controllers/admin.controller');
+const { verifyToken, isAdmin } = require('../middleware/authJWT');
+// Apply middleware for all admin routes
+router.use(verifyToken);
+router.use((req, res, next) => {
+  if (req.user.role === 'admin') {
+    next();
+  } else {
+    res.status(403).json({ message: "Accès interdit - Droits d'administrateur requis" });
+  }
+});
 
-router.get('/users', verifyToken, authorize(['admin']), adminController.getAllUsers);
-router.put('/users/:id/toggle', verifyToken, authorize(['admin']), adminController.toggleUserActivation);
-router.get('/stats', verifyToken, authorize(['admin']), adminController.getStageStats);
-router.get('/users/:id', verifyToken, authorize(['admin']), adminController.getUserDetails);
-router.post('/assign-entreprise', verifyToken, authorize(['admin']), adminController.affecterEntreprise);
+router.get('/users', adminController.getAllUsers);
+router.get('/users/:id/details', adminController.getUserDetails);
+router.get('/stages/stats', adminController.getStageStats);
+router.put('/users/:id/toggle', adminController.toggleUserActivation);
 
 module.exports = router;

@@ -5,6 +5,8 @@ const Candidature = db.candidature;
 const Stage = db.stage;
 const Entreprise = db.entreprise;
 const { Op } = require("sequelize");
+const fs = require('fs');
+const path = require('path');
 
 exports.getProfile = async (req, res) => {
   try {
@@ -92,12 +94,24 @@ exports.postulerStage = async (req, res) => {
     });
 
     if (!etudiant) {
+      // Delete uploaded files if they exist
+      if (req.files) {
+        Object.values(req.files).forEach(file => {
+          fs.unlinkSync(file.path);
+        });
+      }
       return res.status(404).json({ message: "Profil étudiant non trouvé" });
-    }
-
-    const stage = await Stage.findByPk(req.body.stageId);
+    }    // Récupérer le stageId depuis les paramètres de l'URL ou le corps de la requête
+    const stageId = req.params.stageId || req.body.stageId;
     
+    const stage = await Stage.findByPk(stageId);
     if (!stage) {
+      // Delete uploaded files if they exist
+      if (req.files) {
+        Object.values(req.files).forEach(file => {
+          fs.unlinkSync(file.path);
+        });
+      }
       return res.status(404).json({ message: "Stage non trouvé" });
     }
 
@@ -110,11 +124,36 @@ exports.postulerStage = async (req, res) => {
     });
 
     if (candidatureExistante) {
+      // Delete uploaded files if they exist
+      if (req.files) {
+        Object.values(req.files).forEach(file => {
+          fs.unlinkSync(file.path);
+        });
+      }
       return res.status(400).json({ message: "Vous avez déjà postulé à ce stage" });
     }
 
+    // Enregistrer les chemins des fichiers
+    let cvPath = etudiant.cv;
+    let lettreMotivationPath = etudiant.lettreMotivation;
+
+    if (req.files) {
+      if (req.files.cv) {
+        cvPath = '/uploads/' + path.basename(req.files.cv[0].path);
+      }
+      if (req.files.lettreMotivation) {
+        lettreMotivationPath = '/uploads/' + path.basename(req.files.lettreMotivation[0].path);
+      }
+
+      // Mettre à jour le profil de l'étudiant avec les nouveaux chemins de documents
+      await etudiant.update({
+        cv: cvPath,
+        lettreMotivation: lettreMotivationPath
+      });
+    }
+
     // Créer la candidature
-    await Candidature.create({
+    const candidature = await Candidature.create({
       etudiantId: etudiant.id,
       stageId: stage.id,
       entrepriseId: stage.entrepriseId,
@@ -122,9 +161,21 @@ exports.postulerStage = async (req, res) => {
       datePostulation: new Date()
     });
 
-    res.status(201).json({ message: "Candidature soumise avec succès" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(201).json({ 
+      message: "Candidature soumise avec succès",
+      data: candidature
+    });  } catch (err) {
+    // Supprimer les fichiers téléchargés s'ils existent en cas d'erreur
+    if (req.files) {
+      Object.values(req.files).forEach(file => {
+        fs.unlinkSync(file.path);
+      });
+    }
+    console.error('Error submitting application:', err);
+    res.status(500).json({ 
+      message: err.message,
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
   }
 };
 

@@ -1,14 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const entrepriseController = require('../controllers/entrepriseController');
-const { verifyToken, authorize } = require('../middleware/authJWT');
+const { 
+    getEntrepriseStages, 
+    getEntrepriseCandidatures, 
+    createStage, 
+    traiterCandidature,
+    getEntrepriseStats
+} = require('../controllers/entrepriseController');
+const { verifyToken } = require('../middleware/authJWT');
 
-router.get('/profile', verifyToken, authorize(['entreprise']), entrepriseController.getProfile);
-router.put('/profile', verifyToken, authorize(['entreprise']), entrepriseController.updateProfile);
-router.get('/stages', verifyToken, authorize(['entreprise']), entrepriseController.getMesStages);
-router.post('/stages', verifyToken, authorize(['entreprise']), entrepriseController.createStage);
-router.put('/stages/:id', verifyToken, authorize(['entreprise']), entrepriseController.updateStage);
-router.get('/stages/:stageId/candidatures', verifyToken, authorize(['entreprise']), entrepriseController.getCandidatures);
-router.post('/candidatures/traiter', verifyToken, authorize(['entreprise']), entrepriseController.traiterCandidature);
+// Enterprise routes with proper controller functions
+router.get('/stages', verifyToken, getEntrepriseStages);
+router.get('/candidatures', verifyToken, getEntrepriseCandidatures);
+router.get('/stats', verifyToken, getEntrepriseStats);
+router.post('/stages', verifyToken, createStage);
+router.put('/candidatures/:id/traiter', verifyToken, traiterCandidature);
 
 module.exports = router;

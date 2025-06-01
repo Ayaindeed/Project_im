@@ -3,7 +3,9 @@ const router = express.Router();
 const stageController = require('../controllers/stageController');
 const { verifyToken } = require('../middleware/authJWT');
 
-router.get('/', verifyToken, stageController.getAllStages);
+// Public route for listing all available stages
+router.get('/', stageController.getAllStages);
+// Protected route for getting a stage by ID
 router.get('/:id', verifyToken, stageController.getStageById);
 
 module.exports = router;

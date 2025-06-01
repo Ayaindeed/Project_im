@@ -6,6 +6,29 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Layout structure pour sticky footer */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.home-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.home-container {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* Layout */
@@ -92,7 +115,9 @@ body {
 .btn {
   position: relative;
   padding: 0.75rem 1.15rem;
-  border-radius: 50px;
+  border-radius: 50px !important;
+  -webkit-border-radius: 50px !important;
+  -moz-border-radius: 50px !important;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -122,6 +147,9 @@ body {
   );
   transform: translateX(-100%);
   transition: 0.6s;
+  border-radius: inherit;
+  -webkit-border-radius: inherit;
+  -moz-border-radius: inherit;
 }
 
 .btn:hover::before {
@@ -218,6 +246,51 @@ body {
   cursor: not-allowed;
   transform: none !important;
   box-shadow: none !important;
+  border-radius: 50px !important;
+  -webkit-border-radius: 50px !important;
+  -moz-border-radius: 50px !important;
+}
+
+/* Règle globale pour forcer tous les boutons à être ronds dans Chrome et autres navigateurs */
+button, 
+input[type="button"], 
+input[type="submit"], 
+input[type="reset"],
+.btn,
+.button,
+.details-button,
+.status-toggle,
+a.btn,
+a.button {
+  border-radius: 50px !important;
+  -webkit-border-radius: 50px !important;
+  -moz-border-radius: 50px !important;
+  -ms-border-radius: 50px !important;
+  -o-border-radius: 50px !important;
+}
+
+/* Forcer aussi les pseudo-éléments à être ronds */
+button::before,
+button::after,
+.btn::before,
+.btn::after,
+.button::before,
+.button::after {
+  border-radius: inherit !important;
+  -webkit-border-radius: inherit !important;
+  -moz-border-radius: inherit !important;
+}
+
+/* Spécifique pour Chrome - Webkit */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  button, 
+  .btn,
+  .button,
+  .details-button,
+  .status-toggle {
+    border-radius: 50px !important;
+    -webkit-border-radius: 50px !important;
+  }
 }
 
 /* Loading State */
@@ -385,12 +458,6 @@ body {
 }
 
 /* Home Page Styles */
-.home-container {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
 .hero-section {
   text-align: center;
   margin: 3rem 0 4rem;
@@ -411,9 +478,11 @@ body {
 
 .cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  padding: 1rem;
+  padding: 1rem 0.5rem 1rem 0;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .role-card {
@@ -444,6 +513,61 @@ body {
 .role-card p {
   color: var(--text-secondary);
   margin-bottom: 1.5rem;
+}
+
+/* Responsive pour les cartes de rôles */
+@media (max-width: 968px) {
+  .cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .cards-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .role-card {
+    padding: 1.5rem;
+  }
+}
+
+/* Role Card Icons - SVG Styling */
+.role-icon svg {
+  width: 3rem;
+  height: 3rem;
+  stroke: url(#gradient-stroke);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 4px 8px rgba(165, 89, 163, 0.2));
+}
+
+.role-card:hover .role-icon svg {
+  transform: scale(1.1) rotate(5deg);
+  filter: drop-shadow(0 8px 16px rgba(165, 89, 163, 0.3));
+}
+
+/* Gradient pour les icônes SVG */
+.role-card:first-child .role-icon svg {
+  stroke: var(--primary-purple);
+}
+
+.role-card:nth-child(2) .role-icon svg {
+  stroke: var(--primary-pink);
+}
+
+.role-card:last-child .role-icon svg {
+  stroke: var(--primary-deep-purple);
+}
+
+/* Animation supplémentaire au hover */
+.role-card:hover .role-icon svg {
+  animation: icon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes icon-pulse {
+  0%, 100% { transform: scale(1.1) rotate(5deg); }
+  50% { transform: scale(1.15) rotate(-2deg); }
 }
 
 /* Login Page Styles */
@@ -557,6 +681,38 @@ body {
   text-align: center;
   padding-top: 1.5rem;
   border-top: 1px solid #e2e8f0;
+}
+
+.auth-button {
+  padding: 8px 20px;
+  border-radius: 25px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.auth-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  background: var(--gradient-secondary);
+}
+
+.auth-button.secondary {
+  background: var(--gradient-secondary);
+}
+
+.auth-button.primary {
+  background: var(--gradient-primary);
+}
+
+.nav-menu .auth-button {
+  margin-left: 1rem;
 }
 
 @media (max-width: 1200px) {
@@ -728,4 +884,179 @@ body {
   text-align: center;
   padding: 2rem;
   color: var(--text-secondary);
+}
+
+/* Internship List Styles */
+.internship-list {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.internships-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.internship-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.internship-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Candidatures Styles */
+.candidatures-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.stage-selector {
+  margin-bottom: 2rem;
+}
+
+.candidature-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.candidature-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.status {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.status-pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status-accepted {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-rejected {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.candidature-details {
+  color: #4b5563;
+}
+
+.documents {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-radius: 4px;
+}
+
+.document-link {
+  display: inline-block;
+  margin: 0.5rem 1rem 0.5rem 0;
+  padding: 0.5rem 1rem;
+  background-color: #e5e7eb;
+  color: #374151;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.document-link:hover {
+  background-color: #d1d5db;
+}
+
+.commentaire {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-radius: 4px;
+}
+
+.commentaire-text {
+  margin-top: 0.5rem;
+  white-space: pre-wrap;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Admin Register Page Styles */
+.admin-register-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: #f8fafc;
+}
+
+.admin-register-container {
+  width: 100%;
+  max-width: 480px;
+}
+
+.admin-register-box {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.admin-register-form-container {
+  text-align: center;
+}
+
+.admin-register-subtitle {
+  color: #64748b;
+  margin-bottom: 2rem;
+}
+
+.admin-register-form .form-group {
+  margin-bottom: 1.25rem;
+  text-align: left;
 }

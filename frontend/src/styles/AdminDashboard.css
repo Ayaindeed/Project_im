@@ -1,0 +1,160 @@
+.admin-dashboard {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.admin-dashboard h1 {
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.user-management {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.users-table {
+    overflow-x: auto;
+}
+
+.users-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.users-table th,
+.users-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.users-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-badge.active {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-badge.inactive {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background-color: #e2e3e5;
+    color: #383d41;
+}
+
+.role-badge.role-admin {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+.role-badge.role-entreprise {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.role-badge.role-etudiant {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.section-header-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.view-all-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #6c757d;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.view-all-btn:hover {
+    background-color: #5a6268;
+    text-decoration: none;
+}
+
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.stat-card h3 {
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card p {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 50px !important;
+    -webkit-border-radius: 50px !important;
+    -moz-border-radius: 50px !important;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* États désactivés avec bordures rondes */
+.btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    border-radius: 50px !important;
+    -webkit-border-radius: 50px !important;
+    -moz-border-radius: 50px !important;
+}

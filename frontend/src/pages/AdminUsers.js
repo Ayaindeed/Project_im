@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { getAllUsers, toggleUserActivation } from '../services/api';
+import { Link } from 'react-router-dom';
+import { getUserStats, toggleUserStatus } from '../services/userService';
+import '../styles/AdminUsers.css';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -9,7 +11,7 @@ const AdminUsers = () => {
   const fetchUsers = async () => {
     setIsLoading(true);
     try {
-      const data = await getAllUsers();
+      const data = await getUserStats();
       setUsers(data);
     } catch (err) {
       setError(err.response?.data?.message || "Erreur lors du chargement des utilisateurs");
@@ -24,7 +26,7 @@ const AdminUsers = () => {
 
   const handleToggle = async (id) => {
     try {
-      await toggleUserActivation(id);
+      await toggleUserStatus(id);
       fetchUsers();
     } catch (err) {
       setError(err.response?.data?.message || "Erreur lors du changement de statut");
@@ -32,35 +34,55 @@ const AdminUsers = () => {
   };
 
   return (
-    <div>
-      <h2>Utilisateurs</h2>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
+    <div className="admin-users-container">
+      <h2>Gestion des Utilisateurs</h2>
+      
+      {error && <div className="error-message">{error}</div>}
+      
       {isLoading ? (
-        <div>Loading...</div>
+        <div className="loading">Chargement...</div>
       ) : (
-        <table>
+        <table className="admin-users-table">
           <thead>
             <tr>
-              <th>Nom</th>
-              <th>Prénom</th>
+              <th>Utilisateur</th>
               <th>Email</th>
               <th>Rôle</th>
+              <th>Date d'inscription</th>
               <th>Statut</th>
-              <th>Action</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {users.map(u => (
               <tr key={u.id}>
-                <td>{u.nom}</td>
-                <td>{u.prenom}</td>
-                <td>{u.email}</td>
-                <td>{u.role}</td>
-                <td>{u.actif ? 'Actif' : 'Inactif'}</td>
                 <td>
-                  <button onClick={() => handleToggle(u.id)}>
+                  <strong>{u.nom} {u.prenom}</strong>
+                </td>
+                <td>{u.email}</td>
+                <td>
+                  <span className={`role-badge role-${u.role}`}>
+                    {u.role === 'admin' ? 'Administrateur' : 
+                     u.role === 'entreprise' ? 'Entreprise' : 'Étudiant'}
+                  </span>
+                </td>
+                <td>
+                  <span className="registration-date">
+                    {new Date(u.dateInscription).toLocaleDateString()}
+                  </span>
+                </td>
+                <td>
+                  <span className={`status-badge ${u.actif ? 'status-active' : 'status-inactive'}`}>
+                    {u.actif ? 'Actif' : 'Inactif'}
+                  </span>
+                </td>
+                <td>
+                  <button onClick={() => handleToggle(u.id)} className="status-toggle">
                     {u.actif ? 'Désactiver' : 'Activer'}
                   </button>
+                  <Link to={`/admin-user/${u.id}`} className="details-button">
+                    Détails
+                  </Link>
                 </td>
               </tr>
             ))}

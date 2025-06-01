@@ -1,0 +1,694 @@
+/* EntrepriseCandidatures.css */
+@import '../styles/variables.css';
+
+.candidatures-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--background);
+  min-height: calc(100vh - 100px);
+}
+
+.candidatures-container h2 {
+  color: var(--primary-deep-purple);
+  font-size: 1.75rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+/* Stage Selector */
+.stage-selector {
+  margin-bottom: 2rem;
+}
+
+.stage-selector select {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: var(--transition-base);
+  cursor: pointer;
+}
+
+.stage-selector select:focus {
+  border-color: var(--primary-purple);
+  box-shadow: 0 0 0 3px rgba(165, 89, 163, 0.1);
+  outline: none;
+}
+
+/* Candidatures List */
+.candidatures-list {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.candidature-card {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-base);
+  border-left: 4px solid var(--primary-purple);
+}
+
+.candidature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Candidature Header */
+.candidature-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.candidature-header h3 {
+  color: var(--primary-deep-purple);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Status Badges */
+.status {
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-sm);
+}
+
+.status.en_attente {
+  background: linear-gradient(135deg, #fef3c7, #fed7aa);
+  color: #92400e;
+  border: 1px solid #f59e0b;
+}
+
+.status.accepté {
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  color: #166534;
+  border: 1px solid #10b981;
+}
+
+.status.refusé {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  color: #991b1b;
+  border: 1px solid #ef4444;
+}
+
+/* Candidature Details */
+.candidature-details {
+  margin-bottom: 1.5rem;
+}
+
+.candidature-details p {
+  margin: 0.75rem 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.candidature-details strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.candidature-details a {
+  color: var(--primary-purple);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition-base);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.candidature-details a:hover {
+  color: var(--primary-deep-purple);
+  background: rgba(165, 89, 163, 0.1);
+}
+
+/* Candidature Actions */
+.candidature-actions {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: #f8f9fc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.comment-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  transition: var(--transition-base);
+  resize: vertical;
+  min-height: 80px;
+  margin-bottom: 1rem;
+  font-family: inherit;
+}
+
+.comment-input:focus {
+  border-color: var(--primary-purple);
+  box-shadow: 0 0 0 3px rgba(165, 89, 163, 0.1);
+  outline: none;
+}
+
+.comment-input::placeholder {
+  color: var(--text-light);
+}
+
+/* Button Group */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* Enhanced Buttons - Matching Déconnexion Style */
+.btn {
+  position: relative;
+  padding: 0.875rem 1.75rem;
+  border-radius: 50px !important;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: none !important;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 140px;
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+  isolation: isolate;
+  box-sizing: border-box;
+  -webkit-border-radius: 50px !important;
+  -moz-border-radius: 50px !important;
+  -ms-border-radius: 50px !important;
+}
+
+/* Force rounded corners for Chrome/Webkit */
+.btn,
+.btn * {
+  border-radius: 50px !important;
+  -webkit-border-radius: 50px !important;
+}
+
+/* Ensure pseudo-elements also have rounded corners */
+.btn::before,
+.btn::after,
+.btn-success::before,
+.btn-success::after,
+.btn-danger::before,
+.btn-danger::after {
+  border-radius: 50px !important;
+  -webkit-border-radius: 50px !important;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: translateX(-100%);
+  transition: 0.6s;
+  border-radius: 50px;
+}
+
+.btn:hover::before {
+  transform: translateX(100%);
+}
+
+/* Ripple click effect */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+.btn:focus:not(:active)::after {
+  animation: ripple 1s ease-out;
+}
+
+.btn-icon {
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+.btn-text {
+  transition: transform 0.3s ease;
+}
+
+.btn:hover .btn-icon {
+  transform: scale(1.2) rotate(360deg);
+}
+
+.btn:hover .btn-text {
+  transform: translateX(2px);
+}
+
+/* Loading Spinner */
+.btn-loader {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 0.5rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Success Button (Accepter) */
+.btn-success {
+  background: linear-gradient(135deg, #10b981, #059669, #065f46);
+  color: white;
+  box-shadow: 
+    0 4px 15px rgba(16, 185, 129, 0.3),
+    0 2px 4px rgba(16, 185, 129, 0.2);
+  position: relative;
+}
+
+.btn-success::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, #059669, #047857, #064e3b);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 
+    0 8px 25px rgba(16, 185, 129, 0.4),
+    0 4px 10px rgba(16, 185, 129, 0.3);
+  filter: brightness(1.1) saturate(1.2);
+}
+
+.btn-success:hover::after {
+  opacity: 1;
+}
+
+.btn-success:active {
+  transform: translateY(-1px) scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* Danger Button (Refuser) */
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626, #b91c1c);
+  color: white;
+  box-shadow: 
+    0 4px 15px rgba(239, 68, 68, 0.3),
+    0 2px 4px rgba(239, 68, 68, 0.2);
+  position: relative;
+}
+
+.btn-danger::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c, #991b1b);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 
+    0 8px 25px rgba(239, 68, 68, 0.4),
+    0 4px 10px rgba(239, 68, 68, 0.3);
+  filter: brightness(1.1) saturate(1.2);
+}
+
+.btn-danger:hover::after {
+  opacity: 1;
+}
+
+.btn-danger:active {
+  transform: translateY(-1px) scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background: transparent;
+  color: var(--primary-purple);
+  border: 2px solid var(--primary-purple);
+  box-shadow: 0 4px 15px rgba(165, 89, 163, 0.1);
+}
+
+.btn-secondary:hover {
+  background: var(--primary-purple);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(165, 89, 163, 0.2);
+}
+
+/* Disabled State */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  background: #94a3b8 !important;
+  pointer-events: none;
+  border-radius: 50px !important;
+  -webkit-border-radius: 50px !important;
+  -moz-border-radius: 50px !important;
+}
+
+.btn:disabled .btn-icon {
+  transform: none !important;
+  animation: none !important;
+}
+
+.btn:disabled .btn-text {
+  transform: none !important;
+}
+
+/* Focus States for Accessibility */
+.btn:focus {
+  outline: none;
+  box-shadow: 
+    0 0 0 3px rgba(165, 89, 163, 0.3),
+    0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.btn-success:focus {
+  box-shadow: 
+    0 0 0 3px rgba(16, 185, 129, 0.3),
+    0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.btn-danger:focus {
+  box-shadow: 
+    0 0 0 3px rgba(239, 68, 68, 0.3),
+    0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+/* Button Group Enhancements */
+.button-group {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+/* Pulse animation for waiting state */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.btn.loading {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Mobile responsive button adjustments */
+@media (max-width: 768px) {
+  .btn {
+    padding: 0.75rem 1.25rem;
+    min-width: 120px;
+    font-size: 0.8rem;
+  }
+  
+  .button-group {
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .btn-icon {
+    font-size: 1rem;
+  }
+}
+
+/* Candidature Comment */
+.candidature-comment {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #f1f5f9;
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-purple);
+}
+
+.candidature-comment strong {
+  color: var(--primary-deep-purple);
+  font-weight: 600;
+}
+
+.candidature-comment p {
+  margin: 0.5rem 0 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* No Candidatures Message */
+.no-candidatures {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-light);
+  font-size: 1.1rem;
+  background: var(--surface);
+  border-radius: 12px;
+  border: 2px dashed #e2e8f0;
+}
+
+/* Error Message */
+.error-message {
+  color: #e11d48;
+  background: linear-gradient(135deg, #ffe4e6, #fed7d7);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #f43f5e;
+  font-weight: 500;
+}
+
+/* Loading State */
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .candidatures-container {
+    padding: 1rem;
+  }
+  
+  .candidature-card {
+    padding: 1.5rem;
+  }
+  
+  .candidature-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .stage-selector select {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .candidatures-container h2 {
+    font-size: 1.5rem;
+  }
+  
+  .candidature-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .btn {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Success Animation */
+@keyframes successPulse {
+  0% { 
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% { 
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+  }
+  100% { 
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.btn-success.success-animation {
+  animation: successPulse 0.6s ease-out;
+}
+
+/* Danger Animation */
+@keyframes dangerPulse {
+  0% { 
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% { 
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+  100% { 
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.btn-danger.danger-animation {
+  animation: dangerPulse 0.6s ease-out;
+}
+
+/* Icon animations for different states */
+.btn-icon.success {
+  color: #10b981;
+  animation: bounce 0.6s ease-out;
+}
+
+.btn-icon.danger {
+  color: #ef4444;
+  animation: shake 0.6s ease-out;
+}
+
+@keyframes bounce {
+  0%, 20%, 60%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  80% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-2px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(2px);
+  }
+}
+
+/* WebKit/Chrome specific fixes for rounded buttons */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .btn {
+    border-radius: 50px !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -webkit-border-radius: 50px !important;
+  }
+  
+  .btn::before,
+  .btn::after {
+    border-radius: 50px !important;
+    -webkit-border-radius: 50px !important;
+  }
+  
+  .btn-success,
+  .btn-danger {
+    border-radius: 50px !important;
+    -webkit-border-radius: 50px !important;
+  }
+  
+  .btn-success::after,
+  .btn-danger::after {
+    border-radius: 50px !important;
+    -webkit-border-radius: 50px !important;
+  }
+}
+
+/* Additional Chrome-specific fixes */
+@supports (appearance: none) {
+  .btn {
+    border-radius: 50px !important;
+    appearance: none !important;
+    -webkit-border-radius: 50px !important;
+    will-change: transform, box-shadow;
+  }
+}

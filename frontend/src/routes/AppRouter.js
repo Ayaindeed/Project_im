@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Home from '../pages/Home';
+import About from '../pages/About';
 import Login from '../components/Auth/Login';
 import Register from '../components/Auth/Register';
 import Dashboard from '../pages/Dashboard';
-import EntrepriseDashboard from '../pages/EntrepriseDashboard';
-import NavBar from '../components/NavBar';
+import InternshipList from '../pages/InternshipList';
+import MyCandidatures from '../pages/MyCandidatures';
+import NavBar from '../components/Navbar/NavBar'; // Updated path
+import EntrepriseStages from '../pages/EntrepriseStages';
+import EntrepriseCandidatures from '../pages/EntrepriseCandidatures';
+import AdminRegister from '../components/Auth/AdminRegister';
+import AdminDashboard from '../pages/AdminDashboard';
+import AdminUsers from '../pages/AdminUsers';
+import AdminUserDetail from '../pages/AdminUserDetail';
 
 const AppRouter = () => {
   const [auth, setAuth] = useState({
@@ -63,24 +71,95 @@ const AppRouter = () => {
       <NavBar isAuthenticated={auth.isAuthenticated} user={auth.user} />
       <div className="main-content">
         <Switch>
+          {/* Public routes */}
           <Route exact path="/" component={Home} />
+          <Route path="/about" component={About} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
+          <Route path="/admin-register" component={AdminRegister} />
+          
+          {/* Enterprise routes */}
+          <Route 
+            path="/entreprise-candidatures"
+            render={props => 
+              auth.isAuthenticated && auth.user?.role === 'entreprise' ? (
+                <EntrepriseCandidatures {...props} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          
+          <Route 
+            path="/entreprise-stages"
+            render={props => 
+              auth.isAuthenticated && auth.user?.role === 'entreprise' ? (
+                <EntrepriseStages {...props} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          
+          {/* Protected Student Routes */}
+          <Route 
+            path="/stages"
+            render={props => 
+              auth.isAuthenticated && auth.user?.role === 'etudiant' ? (
+                <InternshipList {...props} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          
+          <Route 
+            path="/mes-candidatures"
+            render={props => 
+              auth.isAuthenticated && auth.user?.role === 'etudiant' ? (
+                <MyCandidatures {...props} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+
           <Route 
             path="/dashboard"
             render={props => 
-              auth.isAuthenticated && auth.user?.role === 'etudiant' ? (
+              auth.isAuthenticated ? (
                 <Dashboard {...props} />
               ) : (
                 <Redirect to="/login" />
               )
             }
           />
+          {/* Admin Routes */}
           <Route 
-            path="/entreprise-dashboard"
+            path="/admin-dashboard"
             render={props => 
-              auth.isAuthenticated && auth.user?.role === 'entreprise' ? (
-                <EntrepriseDashboard {...props} />
+              auth.isAuthenticated && auth.user?.role === 'admin' ? (
+                <AdminDashboard {...props} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route 
+            path="/admin-users"
+            render={props => 
+              auth.isAuthenticated && auth.user?.role === 'admin' ? (
+                <AdminUsers {...props} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route 
+            path="/admin-user/:userId"
+            render={props => 
+              auth.isAuthenticated && auth.user?.role === 'admin' ? (
+                <AdminUserDetail {...props} />
               ) : (
                 <Redirect to="/login" />
               )
