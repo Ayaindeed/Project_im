@@ -40,7 +40,7 @@ const About = () => {
                 </div>
               </div>
               <div className="creator-info">
-                <h3>Rifi Aya</h3>
+                <h3>Riffi Aya</h3>
                 <p className="creator-role">Étudiante en Big Data Analytics</p>
                 <p className="creator-speciality">Spécialisée en Data Science & Machine Learning</p>
                 <div className="creator-skills">

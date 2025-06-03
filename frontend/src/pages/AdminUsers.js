@@ -75,9 +75,11 @@ const AdminUsers = () => {
                   <span className={`status-badge ${u.actif ? 'status-active' : 'status-inactive'}`}>
                     {u.actif ? 'Actif' : 'Inactif'}
                   </span>
-                </td>
-                <td>
-                  <button onClick={() => handleToggle(u.id)} className="status-toggle">
+                </td>                <td>
+                  <button 
+                    onClick={() => handleToggle(u.id)} 
+                    className={`status-toggle ${u.actif ? 'deactivate' : 'activate'}`}
+                  >
                     {u.actif ? 'Désactiver' : 'Activer'}
                   </button>
                   <Link to={`/admin-user/${u.id}`} className="details-button">

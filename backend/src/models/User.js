@@ -20,8 +20,7 @@ module.exports = (sequelize, Sequelize) => {
       validate: {
         isEmail: true
       }
-    },
-    motdepasse: {
+    },    motdepasse: {
       type: Sequelize.STRING,
       allowNull: false
     },

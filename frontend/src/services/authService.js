@@ -42,3 +42,24 @@ export const registerAdmin = async (adminData) => {
         throw error;
     }
 };
+
+export const updateProfile = async (formData) => {
+    try {
+        const response = await api.put('/auth/profile', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response;
+    } catch (error) {
+        console.error('Update profile error:', error);
+        throw error;
+    }
+};
+
+export const authService = {
+    loginUser,
+    registerUser,
+    registerAdmin,
+    updateProfile
+};

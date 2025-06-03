@@ -18,7 +18,7 @@ const NavBar = () => {
             setIsAuthenticated(false);
             setUser(null);
         }
-    };
+    };  
 
     // Initialiser l'état d'authentification au chargement
     useEffect(() => {
@@ -58,15 +58,15 @@ const NavBar = () => {
 
                 <div className="nav-right">
                     {isAuthenticated ? (
-                        <div className="nav-menu">
-                            {user?.role === 'entreprise' && (
+                        <div className="nav-menu">                            {user?.role === 'entreprise' && (
                                 <>
+                                    <Link to="/entreprise-dashboard" className="nav-link">Dashboard</Link>
                                     <Link to="/entreprise-stages" className="nav-link">Mes Stages</Link>
                                     <Link to="/entreprise-candidatures" className="nav-link">Demandes Reçues</Link>
                                 </>
-                            )}
-                              {user?.role === 'etudiant' && (
+                            )}{user?.role === 'etudiant' && (
                                 <>
+                                    <Link to="/dashboard" className="nav-link">Dashboard</Link>
                                     <Link to="/stages" className="nav-link">Stages</Link>
                                     <Link to="/mes-candidatures" className="nav-link">Mes candidatures</Link>
                                 </>

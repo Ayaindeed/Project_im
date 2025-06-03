@@ -91,25 +91,34 @@ exports.postulerStage = async (req, res) => {
   try {
     const etudiant = await Etudiant.findOne({
       where: { userId: req.userId }
-    });
-
-    if (!etudiant) {
+    });    if (!etudiant) {
       // Delete uploaded files if they exist
       if (req.files) {
         Object.values(req.files).forEach(file => {
-          fs.unlinkSync(file.path);
+          if (file && file.path) {
+            try {
+              fs.unlinkSync(file.path);
+            } catch (unlinkError) {
+              console.error('Error deleting file:', unlinkError);
+            }
+          }
         });
       }
       return res.status(404).json({ message: "Profil étudiant non trouvé" });
-    }    // Récupérer le stageId depuis les paramètres de l'URL ou le corps de la requête
+    }// Récupérer le stageId depuis les paramètres de l'URL ou le corps de la requête
     const stageId = req.params.stageId || req.body.stageId;
     
-    const stage = await Stage.findByPk(stageId);
-    if (!stage) {
+    const stage = await Stage.findByPk(stageId);    if (!stage) {
       // Delete uploaded files if they exist
       if (req.files) {
         Object.values(req.files).forEach(file => {
-          fs.unlinkSync(file.path);
+          if (file && file.path) {
+            try {
+              fs.unlinkSync(file.path);
+            } catch (unlinkError) {
+              console.error('Error deleting file:', unlinkError);
+            }
+          }
         });
       }
       return res.status(404).json({ message: "Stage non trouvé" });
@@ -121,13 +130,17 @@ exports.postulerStage = async (req, res) => {
         etudiantId: etudiant.id,
         stageId: stage.id
       }
-    });
-
-    if (candidatureExistante) {
+    });    if (candidatureExistante) {
       // Delete uploaded files if they exist
       if (req.files) {
         Object.values(req.files).forEach(file => {
-          fs.unlinkSync(file.path);
+          if (file && file.path) {
+            try {
+              fs.unlinkSync(file.path);
+            } catch (unlinkError) {
+              console.error('Error deleting file:', unlinkError);
+            }
+          }
         });
       }
       return res.status(400).json({ message: "Vous avez déjà postulé à ce stage" });
@@ -168,7 +181,13 @@ exports.postulerStage = async (req, res) => {
     // Supprimer les fichiers téléchargés s'ils existent en cas d'erreur
     if (req.files) {
       Object.values(req.files).forEach(file => {
-        fs.unlinkSync(file.path);
+        if (file && file.path) {
+          try {
+            fs.unlinkSync(file.path);
+          } catch (unlinkError) {
+            console.error('Error deleting file:', unlinkError);
+          }
+        }
       });
     }
     console.error('Error submitting application:', err);

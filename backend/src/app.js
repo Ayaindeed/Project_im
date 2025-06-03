@@ -19,6 +19,9 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// Swagger configuration
+const { swaggerSpec, swaggerUi } = require('./config/swagger');
+
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const etudiantRoutes = require('./routes/etudiantRoutes');
@@ -32,6 +35,19 @@ app.use('/api/etudiant', etudiantRoutes);
 app.use('/api/entreprise', entrepriseRoutes);
 app.use('/api/stage', stageRoutes);
 app.use('/api/admin', adminRoutes);
+
+// Swagger documentation route
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    explorer: true,
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: "API Documentation - Gestion de Stages"
+}));
+
+// Route pour accéder au JSON de l'API
+app.get('/api-docs.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+});
 
 // Error handlers
 app.use((req, res) => {

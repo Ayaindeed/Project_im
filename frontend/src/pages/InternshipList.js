@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { getAllStages } from '../services/stageService';
 import { submitCandidature } from '../services/candidatureService';
+import '../styles/InternshipList.css';
 
 const InternshipList = () => {
   const [stages, setStages] = useState([]);
+  const [filteredStages, setFilteredStages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
   const [selectedStage, setSelectedStage] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedSector, setSelectedSector] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('');
+  const [sortBy, setSortBy] = useState('dateDebut'); // Default sort by start date
   const [candidatureData, setCandidatureData] = useState({
     cv: null,
     lettreMotivation: null
@@ -16,6 +22,10 @@ const InternshipList = () => {
   useEffect(() => {
     fetchStages();
   }, []);
+
+  useEffect(() => {
+    filterStages();
+  }, [stages, searchTerm, selectedSector, selectedStatus, sortBy]);
 
   const fetchStages = async () => {
     setIsLoading(true);
@@ -34,6 +44,72 @@ const InternshipList = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const filterStages = () => {
+    let filtered = [...stages];
+
+    // Text search filter
+    if (searchTerm.trim()) {
+      filtered = filtered.filter(stage => 
+        stage.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        stage.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        stage.entreprise?.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        stage.entreprise?.secteur.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        stage.commentaire?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Sector filter
+    if (selectedSector) {
+      filtered = filtered.filter(stage => 
+        stage.entreprise?.secteur === selectedSector
+      );
+    }
+
+    // Status filter
+    if (selectedStatus) {
+      filtered = filtered.filter(stage => stage.status === selectedStatus);
+    }
+
+    // Sort
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'dateDebut':
+          return new Date(a.dateDebut) - new Date(b.dateDebut);
+        case 'dateFin':
+          return new Date(a.dateFin) - new Date(b.dateFin);
+        case 'titre':
+          return a.titre.localeCompare(b.titre);
+        case 'entreprise':
+          return (a.entreprise?.nom || '').localeCompare(b.entreprise?.nom || '');
+        default:
+          return 0;
+      }
+    });
+
+    setFilteredStages(filtered);
+  };
+
+  // Get unique sectors for filter dropdown
+  const getUniqueSectors = () => {
+    const sectors = stages
+      .map(stage => stage.entreprise?.secteur)
+      .filter(Boolean)
+      .filter((sector, index, array) => array.indexOf(sector) === index);
+    return sectors.sort();
+  };
+
+  // Clear all filters
+  const clearFilters = () => {
+    setSearchTerm('');
+    setSelectedSector('');
+    setSelectedStatus('');
+    setSortBy('dateDebut');
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
   };
 
   const handleFileChange = (event, type) => {
@@ -79,32 +155,182 @@ const InternshipList = () => {
 
   return (
     <div className="internship-list">
-      <h2>Stages Disponibles</h2>
+      <div className="internship-header">
+        <h2>Stages Disponibles</h2>
+        
+        {/* Enhanced Search and Filter Section */}
+        <div className="search-and-filters">
+          <div className="search-container">
+            <div className="search-box">
+              <div className="search-icon">🔍</div>
+              <input
+                type="text"
+                placeholder="Rechercher par titre, entreprise, secteur ou description..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+            </div>
+          </div>
+
+          {/* Filter Controls */}
+          <div className="filters-container">
+            <div className="filter-group">
+              <label htmlFor="sector-filter">Secteur:</label>
+              <select
+                id="sector-filter"
+                value={selectedSector}
+                onChange={(e) => setSelectedSector(e.target.value)}
+                className="filter-select"
+              >
+                <option value="">Tous les secteurs</option>
+                {getUniqueSectors().map(sector => (
+                  <option key={sector} value={sector}>{sector}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label htmlFor="status-filter">Statut:</label>
+              <select
+                id="status-filter"
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                className="filter-select"
+              >
+                <option value="">Tous les statuts</option>
+                <option value="disponible">Disponible</option>
+                <option value="en_cours">En cours</option>
+                <option value="termine">Terminé</option>
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label htmlFor="sort-select">Trier par:</label>
+              <select
+                id="sort-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="filter-select"
+              >
+                <option value="dateDebut">Date de début</option>
+                <option value="dateFin">Date de fin</option>
+                <option value="titre">Titre</option>
+                <option value="entreprise">Entreprise</option>
+              </select>
+            </div>
+
+            {(searchTerm || selectedSector || selectedStatus || sortBy !== 'dateDebut') && (
+              <button onClick={clearFilters} className="clear-filters-btn">
+                Effacer les filtres
+              </button>
+            )}
+          </div>
+
+          {/* Results Info */}
+          <div className="results-info">
+            <span className="results-count">
+              {filteredStages.length} stage(s) affiché(s)
+              {filteredStages.length !== stages.length && ` sur ${stages.length} total`}
+            </span>
+            {searchTerm && (
+              <span className="search-term">
+                pour "{searchTerm}"
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
       
       {successMessage && <div className="success-message">{successMessage}</div>}
       {error && <div className="error-message">{error}</div>}
       
       {isLoading ? (
-        <div className="loading">Chargement...</div>
+        <div className="loading">
+          <div className="loading-spinner"></div>
+          <span>Chargement des stages...</span>
+        </div>
+      ) : filteredStages.length === 0 ? (
+        <div className="no-results">
+          {searchTerm ? 
+            `Aucun stage trouvé pour "${searchTerm}"` : 
+            "Aucun stage disponible pour le moment"
+          }
+        </div>
       ) : (
         <div className="internships-grid">
-          {stages.map(stage => (
+          {filteredStages.map(stage => (
             <div key={stage.id} className="internship-card">
-              <h3>{stage.titre}</h3>
-              <div className="internship-details">
-                <p><strong>Entreprise:</strong> {stage.entreprise?.nom || 'Non spécifiée'}</p>
-                <p><strong>Secteur:</strong> {stage.entreprise?.secteur || 'Non spécifié'}</p>
-                <p><strong>Date de début:</strong> {new Date(stage.dateDebut).toLocaleDateString()}</p>
-                <p><strong>Date de fin:</strong> {new Date(stage.dateFin).toLocaleDateString()}</p>
-                <p className="description">{stage.description}</p>
-                {stage.commentaire && <p><strong>Commentaire:</strong> {stage.commentaire}</p>}
+              <div className="card-header">
+                <h3 className="stage-title">{stage.titre}</h3>
+                <span className={`status-badge status-${stage.status}`}>
+                  {stage.status === 'disponible' && 'Disponible'}
+                  {stage.status === 'en_cours' && 'En cours'}
+                  {stage.status === 'termine' && 'Terminé'}
+                </span>
               </div>
-              <button 
-                className="btn btn-primary"
-                onClick={() => openPostulerModal(stage)}
-              >
-                Postuler
-              </button>
+              
+              <div className="company-info">
+                <div className="company-name">
+                  <strong>{stage.entreprise?.nom || 'Non spécifiée'}</strong>
+                </div>
+                <div className="company-sector">
+                  {stage.entreprise?.secteur || 'Non spécifié'}
+                </div>
+              </div>
+
+              <div className="internship-details">
+                <div className="date-info">
+                  <div className="date-item">
+                    <span className="date-label">📅 Début</span>
+                    <span className="date-value">
+                      {new Date(stage.dateDebut).toLocaleDateString('fr-FR', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                      })}
+                    </span>
+                  </div>
+                  <div className="date-item">
+                    <span className="date-label">📅 Fin</span>
+                    <span className="date-value">
+                      {new Date(stage.dateFin).toLocaleDateString('fr-FR', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                      })}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="description-section">
+                  <h4 className="section-title">Description</h4>
+                  <p className="description">{stage.description}</p>
+                </div>
+                
+                {stage.commentaire && (
+                  <div className="comment-section">
+                    <h4 className="section-title">Informations complémentaires</h4>
+                    <p className="comment">{stage.commentaire}</p>
+                  </div>
+                )}
+
+                <div className="duration-info">
+                  <span className="duration-label">⏱️ Durée:</span>
+                  <span className="duration-value">
+                    {Math.ceil((new Date(stage.dateFin) - new Date(stage.dateDebut)) / (1000 * 60 * 60 * 24))} jours
+                  </span>
+                </div>
+              </div>
+              
+              <div className="card-actions">
+                <button 
+                  className="btn btn-primary apply-btn"
+                  onClick={() => openPostulerModal(stage)}
+                >
+                  Postuler maintenant
+                </button>
+              </div>
             </div>
           ))}
         </div>

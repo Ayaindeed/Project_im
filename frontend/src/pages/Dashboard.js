@@ -1,49 +1,230 @@
 import React, { useState, useEffect } from 'react';
-import { getUserStats } from '../services/userService';
+import { Link } from 'react-router-dom';
+import { getEtudiantCandidatures } from '../services/candidatureService';
 import { getAllStages } from '../services/stageService';
 
 const Dashboard = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [stages, setStages] = useState([]);
+    const [candidatures, setCandidatures] = useState([]);
+    const [stats, setStats] = useState({
+        totalCandidatures: 0,
+        enAttente: 0,
+        acceptees: 0,
+        refusees: 0
+    });
+    const [recentStages, setRecentStages] = useState([]);
     const [error, setError] = useState(null);
     const user = JSON.parse(localStorage.getItem('user') || '{}');
 
     useEffect(() => {
-        const fetchStages = async () => {
+        const fetchDashboardData = async () => {
             setIsLoading(true);
             try {
-                const data = await getAllStages();
-                setStages(data);
+                // Récupérer les candidatures de l'étudiant
+                const candidaturesData = await getEtudiantCandidatures();
+                console.log('Dashboard candidatures data:', candidaturesData);
+                setCandidatures(candidaturesData);
+
+                // Calculer les statistiques
+                const statsData = {
+                    totalCandidatures: candidaturesData.length,
+                    enAttente: candidaturesData.filter(c => c.status === 'en_attente' || c.statut === 'en_attente').length,
+                    acceptees: candidaturesData.filter(c => c.status === 'accepté' || c.statut === 'accepté' || c.status === 'acceptee' || c.statut === 'acceptee').length,
+                    refusees: candidaturesData.filter(c => c.status === 'refusé' || c.statut === 'refusé' || c.status === 'refusee' || c.statut === 'refusee').length
+                };
+                setStats(statsData);
+
+                // Récupérer quelques stages récents pour affichage
+                const stagesData = await getAllStages();
+                console.log('Dashboard stages data:', stagesData);
+                setRecentStages(stagesData.slice(0, 3)); // Les 3 premiers stages
+
             } catch (err) {
-                setError(err.message);
+                console.error('Dashboard fetch error:', err);
+                setError(err.message || 'Erreur lors du chargement des données');
             } finally {
                 setIsLoading(false);
             }
         };
 
-        fetchStages();
+        fetchDashboardData();
     }, []);
+
+    const getStatutBadge = (statut) => {
+        const badges = {
+            'en_attente': { 
+                class: 'status-pending', 
+                text: 'En attente',
+                icon: '⏳'
+            },
+            'acceptee': { 
+                class: 'status-accepted', 
+                text: 'Acceptée',
+                icon: '✅'
+            },
+            'refusee': { 
+                class: 'status-rejected', 
+                text: 'Refusée',
+                icon: '❌'
+            }
+        };
+        return badges[statut] || { class: 'status-pending', text: statut, icon: '⏳' };
+    };
 
     return (
         <div className="dashboard-container">
             <div className="dashboard-header">
-                <h1>Dashboard</h1>
-                <p>Bienvenue {user.prenom} {user.nom} sur la plateforme de gestion des stages !</p>
+                <h1>Tableau de bord Étudiant</h1>
+                <p className="welcome-text">
+                    Bienvenue, {user.prenom} {user.nom} ! 
+                    Voici un aperçu de vos candidatures et des nouvelles opportunités.
+                </p>
             </div>
 
             {error && <div className="error-message">{error}</div>}
             
             {isLoading ? (
-                <div className="loading">Chargement...</div>
+                <div className="loading">Chargement de votre tableau de bord...</div>
             ) : (
-                <div className="stages-list">
-                    {stages.map(stage => (
-                        <div key={stage.id} className="stage-card">
-                            <h3>{stage.titre}</h3>
-                            {/* Add other stage details as needed */}
+                <>
+                    {/* Statistiques des candidatures */}
+                    <div className="dashboard-grid">
+                        <div className="dashboard-card stats-card">
+                            <div className="stat-icon">📋</div>
+                            <h3>Mes Candidatures</h3>
+                            <p className="stat">{stats.totalCandidatures}</p>
+                            <p className="stat-detail">Total des candidatures</p>
+                            <Link to="/mes-candidatures" className="card-link">
+                                Voir toutes mes candidatures →
+                            </Link>
                         </div>
-                    ))}
-                </div>
+
+                        <div className="dashboard-card stats-card pending">
+                            <div className="stat-icon">⏳</div>
+                            <h3>En Attente</h3>
+                            <p className="stat">{stats.enAttente}</p>
+                            <p className="stat-detail">Candidatures en cours</p>
+                        </div>
+
+                        <div className="dashboard-card stats-card accepted">
+                            <div className="stat-icon">✅</div>
+                            <h3>Acceptées</h3>
+                            <p className="stat">{stats.acceptees}</p>
+                            <p className="stat-detail">Félicitations !</p>
+                        </div>
+
+                        <div className="dashboard-card stats-card rejected">
+                            <div className="stat-icon">❌</div>
+                            <h3>Refusées</h3>
+                            <p className="stat">{stats.refusees}</p>
+                            <p className="stat-detail">Continuez vos efforts</p>
+                        </div>
+                    </div>
+
+                    {/* Actions rapides */}
+                    <div className="dashboard-section">
+                        <h2>🚀 Actions Rapides</h2>
+                        <div className="dashboard-grid actions-grid">
+                            <div className="dashboard-card action-card">
+                                <h3>🔍 Rechercher des Stages</h3>
+                                <p>Découvrez de nouvelles opportunités de stage</p>
+                                <Link to="/stages" className="btn btn-primary">
+                                    Explorer les offres
+                                </Link>
+                            </div>
+
+                            <div className="dashboard-card action-card">
+                                <h3>📄 Mes Candidatures</h3>
+                                <p>Suivez l'état de vos candidatures</p>
+                                <Link to="/mes-candidatures" className="btn btn-secondary">
+                                    Gérer mes candidatures
+                                </Link>
+                            </div>
+
+                            <div className="dashboard-card action-card">
+                                <h3>👤 Mon Profil</h3>
+                                <p>Mettez à jour vos informations</p>
+                                <Link to="/profile" className="btn btn-outline">
+                                    Modifier le profil
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Candidatures récentes */}
+                    {candidatures.length > 0 && (
+                        <div className="dashboard-section">
+                            <h2>📋 Mes Dernières Candidatures</h2>
+                            <div className="recent-candidatures">
+                                {candidatures.slice(0, 3).map(candidature => (
+                                    <div key={candidature.id} className="candidature-card">
+                                        <div className="candidature-info">
+                                            <h4>{candidature.Stage?.titre || 'Stage non disponible'}</h4>
+                                            <p className="candidature-entreprise">
+                                                {candidature.Stage?.entreprise?.nom || candidature.Entreprise?.nom || 'Entreprise non spécifiée'}
+                                            </p>
+                                            <p className="candidature-date">
+                                                Candidature envoyée le {new Date(candidature.createdAt).toLocaleDateString('fr-FR')}
+                                            </p>
+                                        </div>
+                                        <div className="candidature-status">
+                                            <span className={`status-badge ${getStatutBadge(candidature.statut).class}`}>
+                                                <span className="status-icon">{getStatutBadge(candidature.statut).icon}</span>
+                                                {getStatutBadge(candidature.statut).text}
+                                            </span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            {candidatures.length > 3 && (
+                                <Link to="/mes-candidatures" className="view-all-link">
+                                    Voir toutes mes candidatures ({candidatures.length})
+                                </Link>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Nouveaux stages recommandés */}
+                    {recentStages.length > 0 && (
+                        <div className="dashboard-section">
+                            <h2>🆕 Nouvelles Opportunités</h2>
+                            <div className="recent-stages">
+                                {recentStages.map(stage => (
+                                    <div key={stage.id} className="stage-preview-card">
+                                        <h4>{stage.titre}</h4>
+                                        <p className="stage-entreprise">{stage.entreprise?.nom || stage.Entreprise?.nom || 'Entreprise non spécifiée'}</p>
+                                        <p className="stage-location">{stage.lieu}</p>
+                                        <p className="stage-duration">
+                                            {stage.duree_semaines ? `${stage.duree_semaines} semaines` : 'Durée non spécifiée'}
+                                        </p>
+                                        <Link to={`/stages/${stage.id}`} className="btn btn-sm btn-primary">
+                                            Voir les détails
+                                        </Link>
+                                    </div>
+                                ))}
+                            </div>
+                            <Link to="/stages" className="view-all-link">
+                                Voir toutes les offres de stage
+                            </Link>
+                        </div>
+                    )}
+
+                    {/* Message d'encouragement */}
+                    {candidatures.length === 0 && (
+                        <div className="dashboard-section welcome-section">
+                            <div className="welcome-card">
+                                <h2>🎯 Commencez votre recherche de stage !</h2>
+                                <p>
+                                    Vous n'avez pas encore postulé pour des stages. 
+                                    Explorez nos offres et trouvez le stage parfait pour votre formation.
+                                </p>
+                                <Link to="/stages" className="btn btn-primary btn-large">
+                                    Découvrir les offres de stage
+                                </Link>
+                            </div>
+                        </div>
+                    )}
+                </>
             )}
         </div>
     );

@@ -1,3 +1,4 @@
+/* Admin Users Page Styles - Updated with role-specific colors */
 .admin-users-container {
     padding: 20px;
     max-width: 1200px;
@@ -84,19 +85,42 @@
 }
 
 .status-toggle {
-    background-color: #f0ad4e;
     border: none;
     color: white;
-    padding: 5px 10px;
+    padding: 6px 12px;
     border-radius: 50px !important;
     -webkit-border-radius: 50px !important;
     -moz-border-radius: 50px !important;
     cursor: pointer;
     font-size: 0.9em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.status-toggle:hover {
-    background-color: #ec971f;
+/* Bouton pour désactiver (rouge) */
+.status-toggle.deactivate {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    box-shadow: 0 2px 4px rgba(231, 76, 60, 0.3);
+}
+
+.status-toggle.deactivate:hover {
+    background: linear-gradient(135deg, #c0392b, #a93226);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.4);
+}
+
+/* Bouton pour activer (vert) */
+.status-toggle.activate {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    box-shadow: 0 2px 4px rgba(39, 174, 96, 0.3);
+}
+
+.status-toggle.activate:hover {
+    background: linear-gradient(135deg, #229954, #27ae60);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(39, 174, 96, 0.4);
 }
 
 .error-message {
@@ -115,27 +139,52 @@
 
 .role-badge {
     display: inline-block;
-    padding: 3px 8px;
-    border-radius: 12px;
+    padding: 6px 14px;
+    border-radius: 20px;
     font-size: 0.8em;
-    font-weight: bold;
-    background-color: #e7f3ff;
-    color: #31708f;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    text-align: center;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
 .role-admin {
-    background-color: #fcf8e3;
-    color: #8a6d3b;
+    background: linear-gradient(135deg, #dcafe7, #e5cef5);
+    color: white;
+    border-color: rgba(192, 57, 43, 0.3);
+    box-shadow: 0 4px 15px rgba(192, 57, 43, 0.3);
+}
+
+.role-admin:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(192, 57, 43, 0.4);
 }
 
 .role-entreprise {
-    background-color: #d9edf7;
-    color: #31708f;
+    background: linear-gradient(135deg, #d9eaf3, #86a7ce);
+    color: white;
+    border-color: rgba(243, 156, 18, 0.3);
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+}
+
+.role-entreprise:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4);
 }
 
 .role-etudiant {
-    background-color: #dff0d8;
-    color: #3c763d;
+    background: linear-gradient(135deg, rgb(70 165 233 / 10%), rgba(165, 89, 163, 0.1));
+    color: white;
+    border-color: rgba(39, 174, 96, 0.3);
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+}
+
+.role-etudiant:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
 }
 
 .registration-date {

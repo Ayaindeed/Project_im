@@ -73,3 +73,25 @@ export const traiterCandidature = async (candidatureId, data) => {
         throw error;
     }
 };
+
+export const updateStage = async (stageId, stageData) => {
+    try {
+        console.log('Updating stage with ID:', stageId, 'and data:', stageData);
+        const response = await api.put(`/entreprise/stages/${stageId}`, stageData);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating stage:', error);
+        throw error;
+    }
+};
+
+export const deleteStage = async (stageId) => {
+    try {
+        console.log('Deleting stage with ID:', stageId);
+        const response = await api.delete(`/entreprise/stages/${stageId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting stage:', error);
+        throw error;
+    }
+};

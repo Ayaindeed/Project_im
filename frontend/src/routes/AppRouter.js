@@ -4,6 +4,7 @@ import Home from '../pages/Home';
 import About from '../pages/About';
 import Login from '../components/Auth/Login';
 import Register from '../components/Auth/Register';
+import ForgotPassword from '../components/Auth/ForgotPassword';
 import Dashboard from '../pages/Dashboard';
 import InternshipList from '../pages/InternshipList';
 import MyCandidatures from '../pages/MyCandidatures';
@@ -14,6 +15,8 @@ import AdminRegister from '../components/Auth/AdminRegister';
 import AdminDashboard from '../pages/AdminDashboard';
 import AdminUsers from '../pages/AdminUsers';
 import AdminUserDetail from '../pages/AdminUserDetail';
+import Profile from '../pages/Profile';
+import EntrepriseDashboard from '../pages/EntrepriseDashboard';
 
 const AppRouter = () => {
   const [auth, setAuth] = useState({
@@ -62,6 +65,38 @@ const AppRouter = () => {
     }
   }, []);
 
+  // Écouter les événements de connexion/déconnexion
+  useEffect(() => {
+    const handleUserLogin = (event) => {
+      const { user } = event.detail;
+      console.log('User login event received:', user);
+      setAuth({
+        isAuthenticated: true,
+        user,
+        loading: false
+      });
+    };
+
+    const handleUserLogout = () => {
+      console.log('User logout event received');
+      setAuth({
+        isAuthenticated: false,
+        user: null,
+        loading: false
+      });
+    };
+
+    // Ajouter les gestionnaires d'événements
+    window.addEventListener('userLogin', handleUserLogin);
+    window.addEventListener('userLogout', handleUserLogout);
+
+    // Nettoyer les gestionnaires à la destruction du composant
+    return () => {
+      window.removeEventListener('userLogin', handleUserLogin);
+      window.removeEventListener('userLogout', handleUserLogout);
+    };
+  }, []);
+
   if (auth.loading) {
     return <div className="loading">Chargement...</div>;
   }
@@ -74,8 +109,24 @@ const AppRouter = () => {
           {/* Public routes */}
           <Route exact path="/" component={Home} />
           <Route path="/about" component={About} />
-          <Route path="/login" component={Login} />
+          <Route 
+            path="/login" 
+            render={props => 
+              auth.isAuthenticated ? (
+                auth.user?.role === 'admin' ? (
+                  <Redirect to="/admin-dashboard" />
+                ) : auth.user?.role === 'entreprise' ? (
+                  <Redirect to="/entreprise-dashboard" />
+                ) : (
+                  <Redirect to="/dashboard" />
+                )
+              ) : (
+                <Login {...props} />
+              )
+            }
+          />
           <Route path="/register" component={Register} />
+          <Route path="/forgot-password" component={ForgotPassword} />
           <Route path="/admin-register" component={AdminRegister} />
           
           {/* Enterprise routes */}
@@ -95,6 +146,17 @@ const AppRouter = () => {
             render={props => 
               auth.isAuthenticated && auth.user?.role === 'entreprise' ? (
                 <EntrepriseStages {...props} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          
+          <Route 
+            path="/entreprise-dashboard"
+            render={props => 
+              auth.isAuthenticated && auth.user?.role === 'entreprise' ? (
+                <EntrepriseDashboard {...props} />
               ) : (
                 <Redirect to="/login" />
               )
@@ -129,6 +191,16 @@ const AppRouter = () => {
             render={props => 
               auth.isAuthenticated ? (
                 <Dashboard {...props} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route 
+            path="/profile"
+            render={props => 
+              auth.isAuthenticated ? (
+                <Profile {...props} />
               ) : (
                 <Redirect to="/login" />
               )

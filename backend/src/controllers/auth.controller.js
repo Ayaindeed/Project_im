@@ -3,6 +3,31 @@ const User = db.user;
 const Etudiant = db.etudiant;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const multer = require('multer');
+const path = require('path');
+
+// Configuration du stockage pour les fichiers uploadés
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname))
+    }
+});
+
+const upload = multer({ 
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if ((file.fieldname === 'cv' || file.fieldname === 'lettreMotivation') && file.mimetype === 'application/pdf') {
+            cb(null, true);
+        } else if (file.fieldname === 'cv' || file.fieldname === 'lettreMotivation') {
+            cb(new Error('Seuls les fichiers PDF sont acceptés'), false);
+        } else {
+            cb(null, true);
+        }
+    }
+});
 
 exports.registerAdmin = async (req, res) => {
     try {
@@ -149,3 +174,72 @@ exports.register = async (req, res) => {
         });
     }
 };
+
+exports.updateProfile = async (req, res) => {
+    try {
+        const userId = req.userId; // depuis le middleware d'authentification
+        const { nom, prenom, email } = req.body;
+        
+        // Vérifier si l'utilisateur existe
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Utilisateur non trouvé'
+            });
+        }
+
+        // Préparer les données à mettre à jour (seulement les champs autorisés du modèle User)
+        const updateData = {};
+        if (nom) updateData.nom = nom;
+        if (prenom) updateData.prenom = prenom;
+        if (email) updateData.email = email;
+
+        // Mettre à jour l'utilisateur
+        await user.update(updateData);
+
+        // Si l'utilisateur est un étudiant, gérer les champs spécifiques aux étudiants
+        if (user.role === 'etudiant') {
+            const { niveau, filiere } = req.body;
+            const Etudiant = require('../models').etudiant;
+            
+            const etudiantData = {};
+            if (niveau) etudiantData.niveau = niveau;
+            if (filiere) etudiantData.filiere = filiere;
+            
+            // Gérer les fichiers (CV et lettre de motivation)
+            if (req.files) {
+                if (req.files.cv) etudiantData.cv = req.files.cv[0].filename;
+                if (req.files.lettreMotivation) etudiantData.lettreMotivation = req.files.lettreMotivation[0].filename;
+            }
+            
+            // Mettre à jour ou créer l'enregistrement étudiant
+            if (Object.keys(etudiantData).length > 0) {
+                await Etudiant.upsert({ userId, ...etudiantData });
+            }
+        }
+
+        // Retourner les données mises à jour (sans le mot de passe)
+        const updatedUser = await User.findByPk(userId, {
+            attributes: { exclude: ['motdepasse'] }
+        });
+
+        res.json({
+            success: true,
+            message: 'Profil mis à jour avec succès',
+            data: updatedUser
+        });
+
+    } catch (error) {
+        console.error('Update profile error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erreur lors de la mise à jour du profil'
+        });
+    }
+};
+
+exports.uploadMiddleware = upload.fields([
+    { name: 'cv', maxCount: 1 },
+    { name: 'lettreMotivation', maxCount: 1 }
+]);

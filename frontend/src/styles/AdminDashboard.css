@@ -68,12 +68,12 @@
 
 .role-badge.role-admin {
     background-color: #cce5ff;
-    color: #004085;
+    color: #781f8b;;
 }
 
 .role-badge.role-entreprise {
     background-color: #d1ecf1;
-    color: #0c5460;
+    color: #0c1260;;
 }
 
 .role-badge.role-etudiant {
@@ -90,8 +90,8 @@
 .view-all-btn {
     display: inline-block;
     padding: 0.5rem 1rem;
-    background-color: #6c757d;
-    color: white;
+    background-color: rgb(247, 247, 242);
+    color: #9f5a96;
     border-radius: 4px;
     text-decoration: none;
     font-size: 0.9rem;
@@ -99,8 +99,9 @@
 }
 
 .view-all-btn:hover {
-    background-color: #5a6268;
+    background-color: rgba(165, 89, 163, 0.3);
     text-decoration: none;
+    color: #9f5a96;
 }
 
 .stats-cards {
