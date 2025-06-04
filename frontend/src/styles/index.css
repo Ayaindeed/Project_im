@@ -1,5 +1,19 @@
 @import './variables.css';
 
+/* Complete CSS Reset to eliminate all gaps */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Inter', -apple-system, sans-serif;
   background: var(--background);
@@ -8,6 +22,7 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  height: 100%;
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden; /* Empêche le défilement horizontal mais permet au footer de s'étendre */
@@ -18,16 +33,26 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  height: 100%;
   width: 100%;
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
+  position: relative;
+  z-index: 1;
 }
 
 .home-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  height: 100%;
   width: 100%;
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
+  position: relative;
+  z-index: 1;
 }
 
 .home-container {
@@ -37,6 +62,8 @@ body {
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box; /* Assure que le padding ne cause pas de débordement */
+  position: relative;
+  z-index: 1;
 }
 
 /* Layout */
@@ -44,6 +71,8 @@ body {
   max-width: 1200px;
   margin: 2rem auto;
   padding: 0 1.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 .card {
@@ -700,6 +729,31 @@ button::after,
   border-top: 1px solid #e2e8f0;
 }
 
+/* Divider for Google OAuth */
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.divider span {
+  padding: 0 1rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: lowercase;
+  background: var(--background);
+}
+
 .auth-button {
   padding: 8px 20px;
   border-radius: 25px;
@@ -883,10 +937,46 @@ button::after,
   width: 100%;
   max-width: 1200px;
   display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 3rem;
+  min-height: 600px;
+}
+
+.register-images {
+  flex: 1;
+  display: flex;
   justify-content: center;
+  align-items: stretch;
+  min-height: 100%;
+}
+
+.image-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  padding: 0.5rem;
+}
+
+.stacked-image {
+  width: 100%;
+  flex: 1;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  min-height: 0;
+}
+
+.stacked-image:hover {
+  transform: translateY(-5px);
 }
 
 .register-box {
+  flex: 1;
   width: 100%;
   max-width: 480px;
   padding: 2.5rem;
@@ -894,6 +984,10 @@ button::after,
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
 }
 
 .register-form-container {
@@ -924,8 +1018,34 @@ button::after,
 }
 
 @media (max-width: 768px) {
+  .register-container {
+    flex-direction: column;
+    gap: 2rem;
+    min-height: auto;
+    align-items: center;
+  }
+  
+  .register-images {
+    order: 1;
+    min-height: auto;
+  }
+  
   .register-box {
+    order: 2;
     max-width: 360px;
+  }
+    .image-stack {
+    gap: 1rem;
+    height: auto;
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .stacked-image {
+    width: 180px;
+    height: 120px;
+    flex: none;
+    max-height: none;
   }
   
   .form-row {

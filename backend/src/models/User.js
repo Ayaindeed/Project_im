@@ -19,10 +19,15 @@ module.exports = (sequelize, Sequelize) => {
       unique: true,
       validate: {
         isEmail: true
-      }
-    },    motdepasse: {
+      }    },    
+    motdepasse: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: true // Allow null for Google OAuth users
+    },
+    googleId: {
+      type: Sequelize.STRING,
+      allowNull: true,
+      unique: true
     },
     role: {
       type: Sequelize.ENUM('etudiant', 'entreprise', 'admin'),

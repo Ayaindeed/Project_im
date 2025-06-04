@@ -45,7 +45,7 @@ const About = () => {
                 <p className="creator-speciality">Spécialisée en Data Science & Machine Learning</p>
                 <div className="creator-skills">
                   <span className="skill-tag">Python</span>
-                  <span className="skill-tag">React</span>
+                  <span className="skill-tag">Node.js</span>
                   <span className="skill-tag">SQL</span>
                   <span className="skill-tag">Analytics</span>
                 </div>
@@ -68,8 +68,8 @@ const About = () => {
                 <p className="creator-speciality">Spécialisée en Data Engineering & Visualization</p>
                 <div className="creator-skills">
                   <span className="skill-tag">JavaScript</span>
-                  <span className="skill-tag">Node.js</span>
-                  <span className="skill-tag">MySQL</span>
+                  <span className="skill-tag">React</span>
+                  <span className="skill-tag">SQL</span>
                   <span className="skill-tag">Tableau</span>
                 </div>
               </div>

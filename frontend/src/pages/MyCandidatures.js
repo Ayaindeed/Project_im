@@ -130,12 +130,8 @@ const MyCandidatures = () => {
                 return (                  <div key={candidature.id} className={`candidature-card status-${candidature.statut || candidature.status}`}>
                     <div className="candidature-header">
                       <div className="stage-info">
-                        <h3>{candidature.Stage?.titre || candidature.stage?.titre || 'Stage non disponible'}</h3>
-                        <span className="entreprise-name">
-                          {candidature.Stage?.Entreprise?.nom || 
-                           candidature.Stage?.entreprise?.nom || 
-                           candidature.stage?.entreprise?.nom || 
-                           'Entreprise non spécifiée'}
+                        <h3>{candidature.stage?.titre || 'Stage non disponible'}</h3>                        <span className="entreprise-name">
+                          {candidature.stage?.entreprise?.nom || 'Entreprise non spécifiée'}
                         </span>
                       </div>
                       <div className={`status-container status-${candidature.statut || candidature.status}`}>                        {getStatusIcon(candidature.statut || candidature.status)}
@@ -157,8 +153,8 @@ const MyCandidatures = () => {
                       <div className="detail-row">
                         <div className="detail-item">
                           <span className="detail-label">📅 Période :</span>                          <span className="detail-value">
-                            {candidature.Stage?.dateDebut || candidature.stage?.dateDebut ? 
-                              `${new Date(candidature.Stage?.dateDebut || candidature.stage?.dateDebut).toLocaleDateString()} - ${new Date(candidature.Stage?.dateFin || candidature.stage?.dateFin).toLocaleDateString()}` :
+                            {candidature.stage?.dateDebut ? 
+                              `${new Date(candidature.stage.dateDebut).toLocaleDateString()} - ${new Date(candidature.stage.dateFin).toLocaleDateString()}` :
                               'Dates non spécifiées'
                             }
                           </span>

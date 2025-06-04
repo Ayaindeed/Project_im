@@ -10,7 +10,6 @@ const EntrepriseDashboard = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const user = JSON.parse(localStorage.getItem('user'));
-
   useEffect(() => {
     const fetchStats = async () => {
       setIsLoading(true);
@@ -23,7 +22,32 @@ const EntrepriseDashboard = () => {
         setIsLoading(false);
       }
     };
+    
     fetchStats();
+
+    // Écouter les événements de mise à jour des statistiques
+    const handleStatsUpdate = (event) => {
+      if (event.detail) {
+        setStats(event.detail);
+      } else {
+        // Si pas de détails, refaire un appel API
+        fetchStats();
+      }
+    };
+
+    // Écouter les candidatures traitées pour rafraîchir les stats
+    const handleCandidatureUpdate = () => {
+      // Petit délai pour s'assurer que le backend a traité la candidature
+      setTimeout(fetchStats, 1000);
+    };
+
+    window.addEventListener('statsUpdated', handleStatsUpdate);
+    window.addEventListener('candidatureTraitee', handleCandidatureUpdate);
+
+    return () => {
+      window.removeEventListener('statsUpdated', handleStatsUpdate);
+      window.removeEventListener('candidatureTraitee', handleCandidatureUpdate);
+    };
   }, []);
 
   return (

@@ -281,7 +281,7 @@
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(210, 72, 150, 0.4);
+    box-shadow: 0 6px 20px #b858a3;
 }
 
 .btn-primary:disabled {

@@ -532,7 +532,7 @@
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #5b21b6;
+  background: #c45dc1;
   transform: translateY(-1px);
 }
 

@@ -24,6 +24,7 @@ db.entreprise = require("./Entreprise.js")(sequelize, Sequelize);
 db.stage = require("./Stage.js")(sequelize, Sequelize);
 db.candidature = require("./Candidature.js")(sequelize, Sequelize);
 db.tuteur = require("./Tuteur.js")(sequelize, Sequelize);
+db.notification = require("./Notification.js")(sequelize, Sequelize);
 
 // Définir les relations
 // User & Etudiant (One-to-One)
@@ -102,6 +103,25 @@ db.entreprise.hasMany(db.candidature, {
 db.candidature.belongsTo(db.entreprise, {
   foreignKey: 'entrepriseId',
   as: 'entreprise'
+});
+
+// Notification relations
+db.etudiant.hasMany(db.notification, {
+  foreignKey: 'etudiantId',
+  as: 'notifications'
+});
+db.notification.belongsTo(db.etudiant, {
+  foreignKey: 'etudiantId',
+  as: 'etudiant'
+});
+
+db.candidature.hasMany(db.notification, {
+  foreignKey: 'candidatureId',
+  as: 'notifications'
+});
+db.notification.belongsTo(db.candidature, {
+  foreignKey: 'candidatureId',
+  as: 'candidature'
 });
 
 module.exports = db;

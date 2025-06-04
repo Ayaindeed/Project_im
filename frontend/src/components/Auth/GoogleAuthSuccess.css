@@ -1,0 +1,86 @@
+.google-auth-success-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e296eb 0%, #764ba2 100%);
+    padding: 20px;
+}
+
+.google-auth-success-container {
+    max-width: 400px;
+    width: 100%;
+}
+
+.google-auth-success-box {
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.success-content h2,
+.error-content h2 {
+    margin-bottom: 16px;
+    color: #333;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.success-content p,
+.error-content p {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #4285f4;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 24px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.error-content {
+    color: #dc3545;
+}
+
+.error-content h2 {
+    color: #dc3545;
+}
+
+.error-content p {
+    color: #6c757d;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .google-auth-success-box {
+        padding: 30px 20px;
+    }
+    
+    .success-content h2,
+    .error-content h2 {
+        font-size: 20px;
+    }
+    
+    .success-content p,
+    .error-content p {
+        font-size: 14px;
+    }
+}

@@ -5,6 +5,7 @@ import About from '../pages/About';
 import Login from '../components/Auth/Login';
 import Register from '../components/Auth/Register';
 import ForgotPassword from '../components/Auth/ForgotPassword';
+import GoogleAuthSuccess from '../components/Auth/GoogleAuthSuccess';
 import Dashboard from '../pages/Dashboard';
 import InternshipList from '../pages/InternshipList';
 import MyCandidatures from '../pages/MyCandidatures';
@@ -109,6 +110,7 @@ const AppRouter = () => {
           {/* Public routes */}
           <Route exact path="/" component={Home} />
           <Route path="/about" component={About} />
+          <Route path="/auth/google/success" component={GoogleAuthSuccess} />
           <Route 
             path="/login" 
             render={props => 

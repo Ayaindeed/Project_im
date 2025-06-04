@@ -70,17 +70,35 @@ exports.getMesCandidatures = async (req, res) => {
         {
           model: Stage,
           as: 'stage',
-          attributes: ['id', 'titre', 'description', 'dateDebut', 'dateFin']
+          attributes: ['id', 'titre', 'description', 'dateDebut', 'dateFin'],
+          include: [{
+            model: Entreprise,
+            as: 'entreprise',
+            attributes: ['id', 'nom', 'secteur']
+          }]
         },
         {
-          model: Entreprise,
-          as: 'entreprise',
-          attributes: ['id', 'nom', 'secteur']
+          model: Etudiant,
+          as: 'etudiant',
+          attributes: ['cv', 'lettreMotivation', 'niveau', 'filiere'],
+          include: [{
+            model: User,
+            as: 'user',
+            attributes: ['nom', 'prenom', 'email']
+          }]
         }
       ]
     });
 
-    res.status(200).json(candidatures);
+    // Ajouter les informations CV et lettre directement dans chaque candidature
+    const candidaturesWithFiles = candidatures.map(candidature => {
+      const candidatureData = candidature.toJSON();
+      candidatureData.cv = candidature.etudiant?.cv || null;
+      candidatureData.lettreMotivation = candidature.etudiant?.lettreMotivation || null;
+      return candidatureData;
+    });
+
+    res.status(200).json(candidaturesWithFiles);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

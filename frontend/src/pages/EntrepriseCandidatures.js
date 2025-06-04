@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getEntrepriseStages } from '../services/stageService';
-import { traiterCandidature } from '../services/candidatureService';
+import { traiterCandidature } from '../services/entrepriseService';
 import { getCandidatures } from '../services/candidatureService';
 import '../styles/EntrepriseCandidatures.css';
 
@@ -124,10 +124,31 @@ const EntrepriseCandidatures = () => {
         try {
             setProcessingId(candidatureId);
             setLoading(true);
-            await traiterCandidature(candidatureId, {
+            const response = await traiterCandidature(candidatureId, {
                 status,
                 commentaire: comment
             });
+            
+            // Si la réponse contient des statistiques mises à jour, on peut les utiliser
+            if (response.stats) {
+                console.log('Statistiques mises à jour:', response.stats);
+                // Émettre un événement pour notifier le dashboard des changements
+                window.dispatchEvent(new CustomEvent('statsUpdated', { 
+                    detail: response.stats 
+                }));
+            }
+              // Émettre un événement pour notifier qu'une candidature a été traitée
+            window.dispatchEvent(new CustomEvent('candidatureTraitee', {
+                detail: { candidatureId, status }
+            }));
+            
+            // Forcer la synchronisation des notifications
+            window.dispatchEvent(new CustomEvent('forceNotificationSync'));
+            
+            // Émettre aussi un événement de nouvelle notification pour déclencher le refresh immédiat
+            window.dispatchEvent(new CustomEvent('newNotification', {
+                detail: { type: 'candidature', status }
+            }));
             
             // Refresh candidatures after processing
             if (selectedStage) {
@@ -154,8 +175,7 @@ const EntrepriseCandidatures = () => {
             <div className="page-header">
                 <h2>Gestion des Candidatures</h2>
                 <div className="candidatures-summary">
-                    {selectedStage && (
-                        <div className="summary-stats">
+                    {selectedStage && (                        <div className="summary-stats">
                             <div className="stat-item">
                                 <span className="stat-number">{candidatures.length}</span>
                                 <span className="stat-label">Total</span>

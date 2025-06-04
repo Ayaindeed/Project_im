@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const multer = require('multer');
 const path = require('path');
+const passport = require('../config/passport'); // Import passport config
 
 // Configuration du stockage pour les fichiers uploadés
 const storage = multer.diskStorage({
@@ -243,3 +244,79 @@ exports.uploadMiddleware = upload.fields([
     { name: 'cv', maxCount: 1 },
     { name: 'lettreMotivation', maxCount: 1 }
 ]);
+
+// Google OAuth Success Handler
+exports.googleAuthSuccess = async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.redirect(`${process.env.FRONTEND_URL}/login?error=authentication_failed`);
+        }
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { 
+                userId: req.user.id,
+                email: req.user.email,
+                role: req.user.role 
+            },
+            process.env.JWT_SECRET || 'your-secret-key',
+            { expiresIn: '24h' }
+        );
+
+        // Get user profile data
+        let userProfile = { ...req.user.dataValues };
+        delete userProfile.motdepasse; // Remove password from response
+
+        // Redirect to frontend with token and user data
+        const redirectUrl = `${process.env.FRONTEND_URL}/auth/google/success?token=${token}&user=${encodeURIComponent(JSON.stringify(userProfile))}`;
+        res.redirect(redirectUrl);
+    } catch (error) {
+        console.error('Google auth success error:', error);
+        res.redirect(`${process.env.FRONTEND_URL}/login?error=server_error`);
+    }
+};
+
+// Google OAuth Failure Handler
+exports.googleAuthFailure = (req, res) => {
+    res.redirect(`${process.env.FRONTEND_URL}/login?error=google_auth_failed`);
+};
+
+// Link Google Account to existing user
+exports.linkGoogleAccount = async (req, res) => {
+    try {
+        const userId = req.userId; // From JWT middleware
+        const { googleId } = req.body;
+
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Utilisateur non trouvé'
+            });
+        }
+
+        // Check if Google ID is already linked to another account
+        const existingGoogleUser = await User.findOne({ where: { googleId } });
+        if (existingGoogleUser && existingGoogleUser.id !== userId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Ce compte Google est déjà lié à un autre utilisateur'
+            });
+        }
+
+        // Link Google account
+        user.googleId = googleId;
+        await user.save();
+
+        res.json({
+            success: true,
+            message: 'Compte Google lié avec succès'
+        });
+    } catch (error) {
+        console.error('Error linking Google account:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erreur lors de la liaison du compte Google'
+        });
+    }
+};

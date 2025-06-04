@@ -3,6 +3,39 @@ import { Link } from 'react-router-dom';
 import { getEtudiantCandidatures } from '../services/candidatureService';
 import { getAllStages } from '../services/stageService';
 
+// Fonction pour calculer la durée en jours entre deux dates
+const calculateDuration = (dateDebut, dateFin) => {
+    if (!dateDebut || !dateFin) return 'Non spécifiée';
+    
+    const startDate = new Date(dateDebut);
+    const endDate = new Date(dateFin);
+    const diffTime = Math.abs(endDate - startDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return '1 jour';
+    if (diffDays === 1) return '1 jour';
+    if (diffDays < 7) return `${diffDays} jours`;
+    if (diffDays < 30) {
+        const weeks = Math.floor(diffDays / 7);
+        const remainingDays = diffDays % 7;
+        if (remainingDays === 0) {
+            return weeks === 1 ? '1 semaine' : `${weeks} semaines`;
+        } else {
+            return weeks === 1 ? `1 semaine et ${remainingDays} jour${remainingDays > 1 ? 's' : ''}` : `${weeks} semaines et ${remainingDays} jour${remainingDays > 1 ? 's' : ''}`;
+        }
+    }
+    if (diffDays < 365) {
+        const months = Math.floor(diffDays / 30);
+        const remainingDays = diffDays % 30;
+        if (remainingDays === 0) {
+            return months === 1 ? '1 mois' : `${months} mois`;
+        } else {
+            return months === 1 ? `1 mois et ${remainingDays} jour${remainingDays > 1 ? 's' : ''}` : `${months} mois et ${remainingDays} jour${remainingDays > 1 ? 's' : ''}`;
+        }
+    }
+    return `${diffDays} jours`;
+};
+
 const Dashboard = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [candidatures, setCandidatures] = useState([]);
@@ -195,7 +228,7 @@ const Dashboard = () => {
                                         <p className="stage-entreprise">{stage.entreprise?.nom || stage.Entreprise?.nom || 'Entreprise non spécifiée'}</p>
                                         <p className="stage-location">{stage.lieu}</p>
                                         <p className="stage-duration">
-                                            {stage.duree_semaines ? `${stage.duree_semaines} semaines` : 'Durée non spécifiée'}
+                                            {calculateDuration(stage.dateDebut, stage.dateFin)}
                                         </p>
                                         <Link to={`/stages/${stage.id}`} className="btn btn-sm btn-primary">
                                             Voir les détails

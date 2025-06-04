@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth.controller');
 const { verifyToken } = require('../middleware/authJWT');
+const passport = require('../config/passport'); // Import passport config
 
 /**
  * @swagger
@@ -126,9 +127,52 @@ const { verifyToken } = require('../middleware/authJWT');
  *         description: Utilisateur non trouvé
  */
 
+/**
+ * @swagger
+ * /auth/google:
+ *   get:
+ *     summary: Initiate Google OAuth authentication
+ *     tags: [Authentication]
+ *     description: Redirect to Google OAuth consent screen
+ *     responses:
+ *       302:
+ *         description: Redirect to Google OAuth
+ */
+
+/**
+ * @swagger
+ * /auth/google/callback:
+ *   get:
+ *     summary: Google OAuth callback
+ *     tags: [Authentication]
+ *     description: Handle Google OAuth callback and redirect to frontend
+ *     responses:
+ *       302:
+ *         description: Redirect to frontend with authentication result
+ */
+
 // Authentication routes
 router.post('/login', authController.login);
 router.post('/register', authController.register);
 router.put('/profile', verifyToken, authController.uploadMiddleware, authController.updateProfile);
+
+// Google OAuth Routes
+router.get('/google', 
+    passport.authenticate('google', { 
+        scope: ['profile', 'email'] 
+    })
+);
+
+router.get('/google/callback',
+    passport.authenticate('google', { 
+        failureRedirect: '/auth/google/failure' 
+    }),
+    authController.googleAuthSuccess
+);
+
+router.get('/google/failure', authController.googleAuthFailure);
+
+// Link Google account to existing user
+router.post('/link-google', verifyToken, authController.linkGoogleAccount);
 
 module.exports = router;

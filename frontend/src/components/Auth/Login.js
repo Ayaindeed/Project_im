@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { loginUser } from '../../services/authService';
+import GoogleAuthButton from './GoogleAuthButton';
 
 const Login = () => {
     const [credentials, setCredentials] = useState({
@@ -60,6 +61,12 @@ const Login = () => {
                             <h2 className="login-title">Connexion</h2>
                             
                             {error && <div className="error-message">{error}</div>}
+
+                            <GoogleAuthButton type="login" />
+                            
+                            <div className="divider">
+                                <span>ou</span>
+                            </div>
 
                             <form onSubmit={handleSubmit} className="login-form">
                                 <div className="form-group">

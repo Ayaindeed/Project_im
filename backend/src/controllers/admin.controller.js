@@ -37,9 +37,7 @@ exports.getStageStats = async (req, res) => {
             }),
             Stage.count(),
             Candidature.count()
-        ]);
-
-        const formattedStats = {
+        ]);        const formattedStats = {
             disponible: 0,
             enCours: 0,
             termine: 0,
@@ -47,18 +45,15 @@ exports.getStageStats = async (req, res) => {
             totalCandidatures: totalCandidatures,
             candidaturesParStatut: {
                 en_attente: 0,
-                validé: 0,
+                accepté: 0,
                 refusé: 0
             }
         };
 
         stageStats.forEach(stat => {
             formattedStats[stat.status] = parseInt(stat.get('count'));
-        });
-
-        candidatureStats.forEach(stat => {
+        });        candidatureStats.forEach(stat => {
             formattedStats.candidaturesParStatut[stat.status] = parseInt(stat.get('count'));
-            formattedStats.totalCandidatures += parseInt(stat.get('count'));
         });
 
         res.status(200).json(formattedStats);
@@ -114,14 +109,18 @@ exports.getUserDetails = async (req, res) => {
             const etudiant = await db.etudiant.findOne({ where: { userId: id } });
             if (etudiant) {
                 userDetails.etudiant = etudiant;
-                
-                // Get student's applications
+                  // Get student's applications
                 const candidatures = await Candidature.findAll({
                     where: { etudiantId: etudiant.id },
                     include: [{
                         model: Stage,
                         as: 'stage',
-                        attributes: ['id', 'titre', 'description', 'dateDebut', 'dateFin', 'status']
+                        attributes: ['id', 'titre', 'description', 'dateDebut', 'dateFin', 'status'],
+                        include: [{
+                            model: db.entreprise,
+                            as: 'entreprise',
+                            attributes: ['id', 'nom', 'secteur']
+                        }]
                     }]
                 });
                 

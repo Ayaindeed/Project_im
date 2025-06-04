@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Logo from '../Logo/Logo';
+import NotificationBell from '../NotificationBell';
 
 const NavBar = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -57,14 +58,13 @@ const NavBar = () => {
                 </div>
 
                 <div className="nav-right">
-                    {isAuthenticated ? (
-                        <div className="nav-menu">                            {user?.role === 'entreprise' && (
+                    {isAuthenticated ? (                        <div className="nav-menu">                            {user?.role === 'entreprise' && (
                                 <>
                                     <Link to="/entreprise-dashboard" className="nav-link">Dashboard</Link>
                                     <Link to="/entreprise-stages" className="nav-link">Mes Stages</Link>
                                     <Link to="/entreprise-candidatures" className="nav-link">Demandes Reçues</Link>
                                 </>
-                            )}{user?.role === 'etudiant' && (
+                            )}                            {user?.role === 'etudiant' && (
                                 <>
                                     <Link to="/dashboard" className="nav-link">Dashboard</Link>
                                     <Link to="/stages" className="nav-link">Stages</Link>
@@ -78,6 +78,8 @@ const NavBar = () => {
                                     <Link to="/admin-users" className="nav-link">Utilisateurs</Link>
                                 </>
                             )}
+                            
+                            <NotificationBell />
                             
                             <button onClick={handleLogout} className="auth-button">
                                 Déconnexion

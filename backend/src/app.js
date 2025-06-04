@@ -2,11 +2,28 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const session = require('express-session');
+const passport = require('./config/passport'); // Import passport config
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
+
+// Session configuration (required for passport)
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'your-session-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+}));
+
+// Initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Middleware
 app.use(cors({
@@ -28,6 +45,35 @@ const etudiantRoutes = require('./routes/etudiantRoutes');
 const entrepriseRoutes = require('./routes/entrepriseRoutes');
 const stageRoutes = require('./routes/stageRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
+
+// Health check routes
+app.get('/health', (req, res) => {
+    res.json({ 
+        status: 'OK', 
+        message: 'Backend is running',
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development'
+    });
+});
+
+app.get('/api/health/db', async (req, res) => {
+    try {
+        const { sequelize } = require('./models');
+        await sequelize.authenticate();
+        res.json({ 
+            status: 'OK', 
+            message: 'Database connection successful',
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            status: 'ERROR', 
+            message: 'Database connection failed',
+            error: error.message 
+        });
+    }
+});
 
 // Use routes with proper prefixes
 app.use('/api/auth', authRoutes);
@@ -35,6 +81,7 @@ app.use('/api/etudiant', etudiantRoutes);
 app.use('/api/entreprise', entrepriseRoutes);
 app.use('/api/stage', stageRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Swagger documentation route
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {

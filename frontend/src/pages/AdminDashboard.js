@@ -18,10 +18,30 @@ const AdminDashboard = () => {
         }
     });
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
+    const [error, setError] = useState(null);    useEffect(() => {
         fetchData();
+        
+        // Écouter les événements de candidature traitée pour mettre à jour les stats
+        const handleCandidatureUpdate = () => {
+            console.log('Admin: Candidature traitée - mise à jour des stats');
+            setTimeout(() => {
+                fetchData();
+            }, 1000);
+        };
+
+        // Écouter les événements de mise à jour des stats
+        const handleStatsUpdate = () => {
+            console.log('Admin: Stats mises à jour');
+            fetchData();
+        };
+
+        window.addEventListener('candidatureTraitee', handleCandidatureUpdate);
+        window.addEventListener('statsUpdated', handleStatsUpdate);
+
+        return () => {
+            window.removeEventListener('candidatureTraitee', handleCandidatureUpdate);
+            window.removeEventListener('statsUpdated', handleStatsUpdate);
+        };
     }, []);
 
     const fetchData = async () => {
@@ -55,9 +75,7 @@ const AdminDashboard = () => {
 
     return (
         <div className="admin-dashboard">
-            <h1>Espace Administration</h1>
-
-            <section className="overview-stats">
+            <h1>Espace Administration</h1>            <section className="overview-stats">
                 <div className="stats-grid">
                     <div className="stat-card">
                         <h3>Total Utilisateurs</h3>
@@ -65,14 +83,33 @@ const AdminDashboard = () => {
                     </div>
                     <div className="stat-card">
                         <h3>Total Stages</h3>
-                        <p>{stageStats.disponible + stageStats.enCours + stageStats.termine}</p>
+                        <p>{stageStats.total || 0}</p>
                     </div>
                     <div className="stat-card">
                         <h3>Total Candidatures</h3>
-                        <p>{stageStats.totalCandidatures}</p>
+                        <p>{stageStats.totalCandidatures || 0}</p>
                     </div>
                 </div>
-            </section>            <section className="user-management">
+                
+                {/* Statistiques détaillées des candidatures */}
+                <div className="candidature-stats">
+                    <h3>Candidatures par statut</h3>
+                    <div className="stats-grid">
+                        <div className="stat-card pending">
+                            <h4>En attente</h4>
+                            <p>{stageStats.candidaturesParStatut?.en_attente || 0}</p>
+                        </div>
+                        <div className="stat-card accepted">
+                            <h4>Acceptées</h4>
+                            <p>{stageStats.candidaturesParStatut?.accepté || 0}</p>
+                        </div>
+                        <div className="stat-card rejected">
+                            <h4>Refusées</h4>
+                            <p>{stageStats.candidaturesParStatut?.refusé || 0}</p>
+                        </div>
+                    </div>
+                </div>
+            </section><section className="user-management">
                 <h2>Gestion des comptes utilisateurs</h2>
                 <div className="section-header-actions">
                     <Link to="/admin-users" className="view-all-btn">Voir tous les utilisateurs</Link>
@@ -113,45 +150,8 @@ const AdminDashboard = () => {
                                         </button>
                                     </td>
                                 </tr>
-                            ))}
-                        </tbody>
+                            ))}                        </tbody>
                     </table>
-                </div>
-            </section>
-
-            <section className="stage-stats">
-                <h2>Statistiques des stages</h2>
-                <div className="stats-grid">
-                    <div className="stat-card">
-                        <h3>Stages en cours</h3>
-                        <p>{stageStats.enCours || 0}</p>
-                    </div>
-                    <div className="stat-card">
-                        <h3>Stages disponibles</h3>
-                        <p>{stageStats.disponible || 0}</p>
-                    </div>
-                    <div className="stat-card">
-                        <h3>Stages terminés</h3>
-                        <p>{stageStats.termine || 0}</p>
-                    </div>
-                </div>
-            </section>
-
-            <section className="candidature-stats">
-                <h2>Statistiques des candidatures</h2>
-                <div className="stats-grid">
-                    <div className="stat-card">
-                        <h3>En attente</h3>
-                        <p>{stageStats.candidaturesParStatut.en_attente || 0}</p>
-                    </div>
-                    <div className="stat-card">
-                        <h3>Acceptées</h3>
-                        <p>{stageStats.candidaturesParStatut.accepte || 0}</p>
-                    </div>
-                    <div className="stat-card">
-                        <h3>Refusées</h3>
-                        <p>{stageStats.candidaturesParStatut.refuse || 0}</p>
-                    </div>
                 </div>
             </section>
         </div>

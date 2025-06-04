@@ -32,9 +32,8 @@ module.exports = (sequelize, Sequelize) => {
     datePostulation: {
       type: Sequelize.DATE,
       defaultValue: Sequelize.NOW
-    },
-    status: {
-      type: Sequelize.ENUM('en_attente', 'validé', 'refusé'),
+    },    status: {
+      type: Sequelize.ENUM('en_attente', 'accepté', 'refusé'),
       defaultValue: 'en_attente'
     },
     commentaireEntreprise: {

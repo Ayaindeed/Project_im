@@ -89,7 +89,7 @@
 
 .status-en_attente {
     background-color: #fcf8e3;
-    color: #8a6d3b;
+    color: black;
 }
 
 .status-validé, .status-accepté {
@@ -98,7 +98,7 @@
 }
 
 .status-refusé {
-    background-color: #f2dede;
+    background-color: beige;
     color: #a94442;
 }
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';  // Changed from useNavigate
 import { registerUser } from '../../services/authService';
+import GoogleAuthButton from './GoogleAuthButton';
 import leftImage from '../../assets/im1.png';
 import rightImage from '../../assets/im2.png';
 
@@ -33,12 +34,10 @@ const Register = () => {
     return (
         <div className="register-wrapper">
             <div className="register-container">
-                <div className="login-images">
-                    <div className="image-left">
-                        <img src={leftImage} alt="Welcome" />
-                    </div>
-                    <div className="image-right">
-                        <img src={rightImage} alt="Features" />
+                <div className="register-images">
+                    <div className="image-stack">
+                        <img src={leftImage} alt="Welcome" className="stacked-image" />
+                        <img src={rightImage} alt="Features" className="stacked-image" />
                     </div>
                 </div>
                 
@@ -50,6 +49,12 @@ const Register = () => {
                         </p>
 
                         {error && <div className="error-message">{error}</div>}
+
+                        <GoogleAuthButton type="register" />
+                        
+                        <div className="divider">
+                            <span>ou</span>
+                        </div>
 
                         <form onSubmit={handleSubmit} className="register-form">
                             <div className="form-row">
@@ -153,6 +158,8 @@ const Register = () => {
                             Se connecter
                           </Link>
                         </div>
+
+                        
                     </div>
                 </div>
             </div>
