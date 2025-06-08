@@ -258,6 +258,55 @@ textarea.form-control {
   border-color: #ef4444;
 }
 
+/* Independent Stage Action Buttons - Smaller and Lightweight */
+.stage-edit-btn,
+.stage-delete-btn {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-weight: 400;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.stage-edit-btn:hover {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px 0 rgba(59, 130, 246, 0.25);
+}
+
+.stage-delete-btn:hover {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px 0 rgba(239, 68, 68, 0.25);
+}
+
+.stage-edit-btn .action-icon,
+.stage-delete-btn .action-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  stroke-width: 2;
+}
+
+.stage-edit-btn:active,
+.stage-delete-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
 /* Stage Card Body */
 .stage-card-body {
   padding: 1.5rem;

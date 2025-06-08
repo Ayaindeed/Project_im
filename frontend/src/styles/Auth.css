@@ -1,0 +1,193 @@
+/* Enhanced File Upload Styles for Auth Components - Override global styles */
+
+.file-upload-container {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.file-input-hidden {
+  display: none;
+}
+
+.file-upload-button {
+  display: block;
+  width: 100%;
+  padding: 1.5rem;  border: 2px dashed #a559a3;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(165, 89, 163, 0.05), rgba(150, 64, 148, 0.03));
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Styles spécifiques pour les boutons de téléchargement de fichier */
+.register-form .file-upload-button .upload-icon {
+  color: #a559a3 !important;
+  transition: color 0.3s ease;
+}
+
+.register-form .file-upload-button:hover .upload-icon {
+  color: #d24896 !important;
+}
+
+.register-form .file-upload-button .upload-main-text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #964094 !important;
+}
+
+.register-form .file-upload-button .upload-sub-text {
+  font-size: 0.875rem;
+  color: #a559a3 !important;
+}
+
+.file-upload-button:hover {
+  border-color: #d24896;
+  background: linear-gradient(135deg, rgba(210, 72, 150, 0.1), rgba(165, 89, 163, 0.08));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(165, 89, 163, 0.15);
+}
+
+.file-upload-button.drag-over {
+  border-color: #d24896 !important;
+  background: linear-gradient(135deg, rgba(210, 72, 150, 0.15), rgba(165, 89, 163, 0.1)) !important;
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(165, 89, 163, 0.25);
+}
+
+.file-upload-button:active {
+  transform: translateY(0);
+}
+
+.file-upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.file-upload-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.file-selected {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #059669;
+  background: rgba(5, 150, 105, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(5, 150, 105, 0.2);
+  animation: slideInSuccess 0.3s ease-out;
+}
+
+@keyframes slideInSuccess {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation for successful file upload */
+.file-upload-button.has-file {
+  border-color: #059669;
+  background: rgba(5, 150, 105, 0.05);
+}
+
+.file-upload-button.has-file .upload-icon {
+  color: #059669;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .file-upload-button {
+    padding: 1rem;
+  }
+  
+  .upload-main-text {
+    font-size: 0.9rem;
+  }
+  
+  .upload-sub-text {
+    font-size: 0.8rem;
+  }
+}
+
+/* Dark mode support - using app primary colors */
+@media (prefers-color-scheme: dark) {
+  .file-upload-button {
+    background: linear-gradient(135deg, rgba(165, 89, 163, 0.08), rgba(150, 64, 148, 0.05));
+    border-color: #a559a3;
+  }
+  
+  .file-upload-button:hover {
+    background: linear-gradient(135deg, rgba(210, 72, 150, 0.12), rgba(165, 89, 163, 0.1));
+    border-color: #d24896;
+  }
+  
+  .upload-main-text {
+    color: #d24896 !important;
+  }
+  
+  .upload-sub-text {
+    color: #a559a3 !important;
+  }
+  
+  .upload-icon {
+    color: #a559a3 !important;
+  }
+  
+  .file-upload-button:hover .upload-icon {
+    color: #d24896 !important;
+  }
+}
+
+/* Loading state for file processing */
+.file-upload-button.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.file-upload-button.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid transparent;
+  border-top: 2px solid #a559a3;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* File type validation feedback */
+.file-upload-error {
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.05) !important;
+}
+
+.file-upload-error .upload-icon {
+  color: #ef4444 !important;
+}
+
+.file-upload-error .upload-main-text {
+  color: #ef4444 !important;
+}

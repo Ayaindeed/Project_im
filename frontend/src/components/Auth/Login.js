@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, Link, useLocation } from 'react-router-dom';
 import { loginUser } from '../../services/authService';
 import GoogleAuthButton from './GoogleAuthButton';
 
@@ -11,6 +11,13 @@ const Login = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const history = useHistory();
+    const location = useLocation();
+    
+    // Déterminer le type d'utilisateur basé sur l'URL ou les paramètres
+    const urlParams = new URLSearchParams(location.search);
+    const userType = urlParams.get('type'); // admin, entreprise, ou null pour étudiant
+    const isAdminLogin = userType === 'admin' || location.pathname === '/admin-login';
+    const isEntrepriseLogin = userType === 'entreprise' || location.pathname === '/entreprise-login';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -58,7 +65,11 @@ const Login = () => {
                         </div>
 
                         <div className="login-form-wrapper">
-                            <h2 className="login-title">Connexion</h2>
+                            <h2 className="login-title">
+                                {isAdminLogin ? 'Connexion Administrateur' : 
+                                 isEntrepriseLogin ? 'Connexion Entreprise' : 
+                                 'Connexion'}
+                            </h2>
                             
                             {error && <div className="error-message">{error}</div>}
 
@@ -102,12 +113,14 @@ const Login = () => {
                                 </Link>
                             </div>
 
-                            <div className="login-footer">
-                                <p className="signup-text">Pas encore de compte ?</p>
-                                <Link to="/register" className="btn btn-secondary btn-block signup-btn">
-                                    Créer un compte
-                                </Link>
-                            </div>
+                            {!isAdminLogin && !isEntrepriseLogin && (
+                                <div className="login-footer">
+                                    <p className="signup-text">Pas encore de compte ?</p>
+                                    <Link to="/register" className="btn btn-secondary btn-block signup-btn">
+                                        Créer un compte
+                                    </Link>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -37,7 +37,6 @@ const NotificationBell = () => {
       setNotifications(data || []);
     } catch (error) {
       console.error('Erreur lors du chargement des notifications:', error);
-      // No fake notifications - show empty state
       setNotifications([]);
     } finally {
       setLoading(false);
@@ -53,7 +52,7 @@ const NotificationBell = () => {
       
       // Si le nombre a augmenté ou si c'est un force update, déclencher l'animation
       if (newCount > unreadCount || forceUpdate) {
-        // Animation du badge pour attirer l'attention
+        // Animation du badge
         const badge = document.querySelector('.notification-badge');
         if (badge && newCount > 0) {
           badge.classList.add('notification-pulse');
@@ -80,7 +79,6 @@ const NotificationBell = () => {
   }, []);
 
   useEffect(() => {
-    // Chargement initial immédiat
     immediateCheck();
     
     // Polling plus fréquent pour les nouvelles notifications (toutes les 3 secondes)
@@ -103,7 +101,7 @@ const NotificationBell = () => {
       }, 500);
     };
 
-    // Écouter les événements de mise à jour des stats (qui incluent souvent des nouvelles notifications)
+    // Écouter les événements de mise à jour des stats
     const handleStatsUpdate = () => {
       console.log('Event: stats mises à jour');
       setTimeout(() => {

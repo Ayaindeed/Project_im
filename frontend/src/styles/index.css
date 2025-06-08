@@ -1147,22 +1147,22 @@ button::after,
 /* Statistics Cards */
 .stats-card {
   border-left: 4px solid var(--primary-purple);
-  background: linear-gradient(135deg, rgba(165, 89, 163, 0.05) 0%, rgba(255, 255, 255, 0.9) 100%);
+  background: white;
 }
 
 .stats-card.pending {
   border-left-color: #f59e0b;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(255, 255, 255, 0.9) 100%);
+  background: white;
 }
 
 .stats-card.accepted {
   border-left-color: #10b981;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(255, 255, 255, 0.9) 100%);
+  background: white;
 }
 
 .stats-card.rejected {
   border-left-color: #ef4444;
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(255, 255, 255, 0.9) 100%);
+  background: white;
 }
 
 .stat-detail {
@@ -1353,7 +1353,7 @@ button::after,
 }
 
 .welcome-card {
-  background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-pink) 100%);
+  background: var(--primary-deep-purple);
   color: white;
   text-align: center;
   padding: 3rem 2rem;

@@ -149,11 +149,19 @@ exports.register = async (req, res) => {
 
         // If student, create student profile
         if (role === 'etudiant') {
-            await Etudiant.create({
+            const etudiantData = {
                 userId: user.id,
                 niveau,
                 filiere
-            });
+            };
+
+            // Gérer les fichiers (CV et lettre de motivation)
+            if (req.files) {
+                if (req.files.cv) etudiantData.cv = req.files.cv[0].filename;
+                if (req.files.lettreMotivation) etudiantData.lettreMotivation = req.files.lettreMotivation[0].filename;
+            }
+
+            await Etudiant.create(etudiantData);
         }
 
         res.status(201).json({

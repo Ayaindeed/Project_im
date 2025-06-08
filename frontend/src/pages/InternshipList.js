@@ -13,7 +13,7 @@ const InternshipList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSector, setSelectedSector] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
-  const [sortBy, setSortBy] = useState('dateDebut'); // Default sort by start date
+  const [sortBy, setSortBy] = useState('dateDebut'); 
   const [candidatureData, setCandidatureData] = useState({
     cv: null,
     lettreMotivation: null
@@ -121,7 +121,7 @@ const InternshipList = () => {
 
   const handlePostuler = async (stageId) => {
     try {
-      setError(null); // Clear any previous errors
+      setError(null);
       
       if (!candidatureData.cv || !candidatureData.lettreMotivation) {
         setError("Veuillez télécharger votre CV et votre lettre de motivation");
@@ -129,7 +129,6 @@ const InternshipList = () => {
       }
 
       const formData = new FormData();
-      // Nous n'avons plus besoin d'ajouter stageId au formData car il est dans l'URL
       formData.append('cv', candidatureData.cv);
       formData.append('lettreMotivation', candidatureData.lettreMotivation);
 
@@ -162,10 +161,9 @@ const InternshipList = () => {
         <div className="search-and-filters">
           <div className="search-container">
             <div className="search-box">
-              <div className="search-icon">🔍</div>
               <input
                 type="text"
-                placeholder="Rechercher par titre, entreprise, secteur ou description..."
+                placeholder="🔍 Rechercher par titre, entreprise, secteur ou description..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="search-input"

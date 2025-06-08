@@ -61,9 +61,9 @@ const Dashboard = () => {
                 // Calculer les statistiques
                 const statsData = {
                     totalCandidatures: candidaturesData.length,
-                    enAttente: candidaturesData.filter(c => c.status === 'en_attente' || c.statut === 'en_attente').length,
-                    acceptees: candidaturesData.filter(c => c.status === 'accepté' || c.statut === 'accepté' || c.status === 'acceptee' || c.statut === 'acceptee').length,
-                    refusees: candidaturesData.filter(c => c.status === 'refusé' || c.statut === 'refusé' || c.status === 'refusee' || c.statut === 'refusee').length
+                    enAttente: candidaturesData.filter(c => c.status === 'en_attente').length,
+                    acceptees: candidaturesData.filter(c => c.status === 'accepté').length,
+                    refusees: candidaturesData.filter(c => c.status === 'refusé').length
                 };
                 setStats(statsData);
 
@@ -90,12 +90,12 @@ const Dashboard = () => {
                 text: 'En attente',
                 icon: '⏳'
             },
-            'acceptee': { 
+            'accepté': { 
                 class: 'status-accepted', 
                 text: 'Acceptée',
                 icon: '✅'
             },
-            'refusee': { 
+            'refusé': { 
                 class: 'status-rejected', 
                 text: 'Refusée',
                 icon: '❌'
@@ -156,7 +156,7 @@ const Dashboard = () => {
 
                     {/* Actions rapides */}
                     <div className="dashboard-section">
-                        <h2>🚀 Actions Rapides</h2>
+                        <h2>Actions Rapides</h2>
                         <div className="dashboard-grid actions-grid">
                             <div className="dashboard-card action-card">
                                 <h3>🔍 Rechercher des Stages</h3>
@@ -187,23 +187,23 @@ const Dashboard = () => {
                     {/* Candidatures récentes */}
                     {candidatures.length > 0 && (
                         <div className="dashboard-section">
-                            <h2>📋 Mes Dernières Candidatures</h2>
+                            <h2>Mes Dernières Candidatures</h2>
                             <div className="recent-candidatures">
                                 {candidatures.slice(0, 3).map(candidature => (
                                     <div key={candidature.id} className="candidature-card">
                                         <div className="candidature-info">
-                                            <h4>{candidature.Stage?.titre || 'Stage non disponible'}</h4>
+                                            <h4>{candidature.stage?.titre || 'Stage non disponible'}</h4>
                                             <p className="candidature-entreprise">
-                                                {candidature.Stage?.entreprise?.nom || candidature.Entreprise?.nom || 'Entreprise non spécifiée'}
+                                                {candidature.stage?.entreprise?.nom || 'Entreprise non spécifiée'}
                                             </p>
                                             <p className="candidature-date">
                                                 Candidature envoyée le {new Date(candidature.createdAt).toLocaleDateString('fr-FR')}
                                             </p>
                                         </div>
                                         <div className="candidature-status">
-                                            <span className={`status-badge ${getStatutBadge(candidature.statut).class}`}>
-                                                <span className="status-icon">{getStatutBadge(candidature.statut).icon}</span>
-                                                {getStatutBadge(candidature.statut).text}
+                                            <span className={`status-badge ${getStatutBadge(candidature.status).class}`}>
+                                                <span className="status-icon">{getStatutBadge(candidature.status).icon}</span>
+                                                {getStatutBadge(candidature.status).text}
                                             </span>
                                         </div>
                                     </div>
@@ -220,7 +220,7 @@ const Dashboard = () => {
                     {/* Nouveaux stages recommandés */}
                     {recentStages.length > 0 && (
                         <div className="dashboard-section">
-                            <h2>🆕 Nouvelles Opportunités</h2>
+                            <h2>Nouvelles Opportunités</h2>
                             <div className="recent-stages">
                                 {recentStages.map(stage => (
                                     <div key={stage.id} className="stage-preview-card">
@@ -246,7 +246,7 @@ const Dashboard = () => {
                     {candidatures.length === 0 && (
                         <div className="dashboard-section welcome-section">
                             <div className="welcome-card">
-                                <h2>🎯 Commencez votre recherche de stage !</h2>
+                                <h2>Commencez votre recherche de stage !</h2>
                                 <p>
                                     Vous n'avez pas encore postulé pour des stages. 
                                     Explorez nos offres et trouvez le stage parfait pour votre formation.

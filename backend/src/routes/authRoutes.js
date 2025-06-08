@@ -52,17 +52,42 @@ const passport = require('../config/passport'); // Import passport config
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/RegisterRequest'
- *           example:
- *             nom: "Dupont"
- *             prenom: "Marie"
- *             email: "marie.dupont@example.com"
- *             motdepasse: "motdepasse123"
- *             role: "etudiant"
- *             niveau: "Master 2"
- *             filiere: "Informatique"
+ *             type: object
+ *             required:
+ *               - nom
+ *               - prenom
+ *               - email
+ *               - motdepasse
+ *             properties:
+ *               nom:
+ *                 type: string
+ *               prenom:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               motdepasse:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [etudiant, entreprise]
+ *                 default: etudiant
+ *               niveau:
+ *                 type: string
+ *                 description: "Pour les étudiants uniquement"
+ *               filiere:
+ *                 type: string
+ *                 description: "Pour les étudiants uniquement"
+ *               cv:
+ *                 type: string
+ *                 format: binary
+ *                 description: "Fichier CV (PDF uniquement)"
+ *               lettreMotivation:
+ *                 type: string
+ *                 format: binary
+ *                 description: "Fichier lettre de motivation (PDF uniquement)"
  *     responses:
  *       201:
  *         description: Inscription réussie
@@ -153,7 +178,7 @@ const passport = require('../config/passport'); // Import passport config
 
 // Authentication routes
 router.post('/login', authController.login);
-router.post('/register', authController.register);
+router.post('/register', authController.uploadMiddleware, authController.register);
 router.put('/profile', verifyToken, authController.uploadMiddleware, authController.updateProfile);
 
 // Google OAuth Routes

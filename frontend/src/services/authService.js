@@ -23,7 +23,11 @@ export const loginUser = async (credentials) => {
 };
 
 export const registerUser = async (userData) => {
-    const response = await api.post('/auth/register', userData);
+    const response = await api.post('/auth/register', userData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
     return response.data;
 };
 

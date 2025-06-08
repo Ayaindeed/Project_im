@@ -11,21 +11,7 @@ const EntrepriseCandidatures = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [comment, setComment] = useState('');
-    const [processingId, setProcessingId] = useState(null);
-    const [searchTerm, setSearchTerm] = useState('');    useEffect(() => {
-        fetchStages();
-    }, []);
-
-    // Filter candidatures based on search term
-    const filteredCandidatures = candidatures.filter(candidature => {
-        if (!searchTerm) return true;
-        const searchLower = searchTerm.toLowerCase();
-        return (
-            candidature.etudiant.nom.toLowerCase().includes(searchLower) ||
-            candidature.etudiant.prenom.toLowerCase().includes(searchLower) ||
-            getStatusText(candidature.status).toLowerCase().includes(searchLower)
-        );
-    });
+    const [processingId, setProcessingId] = useState(null);    const [searchTerm, setSearchTerm] = useState('');
 
     // Helper function to get status display text
     const getStatusText = (status) => {
@@ -70,7 +56,23 @@ const EntrepriseCandidatures = () => {
             default:
                 return null;
         }
-    };    // Helper function to get file URL
+    };
+
+    useEffect(() => {
+        fetchStages();
+    }, []);
+
+    // Filter candidatures based on search term
+    const filteredCandidatures = candidatures.filter(candidature => {
+        if (!searchTerm) return true;
+        const searchLower = searchTerm.toLowerCase();
+        return (
+            candidature.etudiant.user.nom.toLowerCase().includes(searchLower) ||
+            candidature.etudiant.user.prenom.toLowerCase().includes(searchLower) ||
+            candidature.etudiant.user.email.toLowerCase().includes(searchLower) ||
+            getStatusText(candidature.status).toLowerCase().includes(searchLower)
+        );
+    });// Helper function to get file URL
     const getFileUrl = (filePath) => {
         if (!filePath) return null;
         
@@ -150,10 +152,30 @@ const EntrepriseCandidatures = () => {
                 detail: { type: 'candidature', status }
             }));
             
-            // Refresh candidatures after processing
-            if (selectedStage) {
-                handleStageSelect(selectedStage.id);
-            }
+            // Mettre à jour localement l'état de la candidature
+            setCandidatures(prevCandidatures => 
+                prevCandidatures.map(candidature => 
+                    candidature.id === candidatureId 
+                        ? { ...candidature, status: status }
+                        : candidature
+                )
+            );
+            
+            // Mettre à jour également les stages avec les nouvelles candidatures
+            setStages(prevStages => 
+                prevStages.map(stage => 
+                    stage.id === selectedStage?.id 
+                        ? {
+                            ...stage,
+                            candidatures: stage.candidatures.map(candidature =>
+                                candidature.id === candidatureId
+                                    ? { ...candidature, status: status }
+                                    : candidature
+                            )
+                        }
+                        : stage
+                )
+            );
             
             setComment('');
             
@@ -217,10 +239,6 @@ const EntrepriseCandidatures = () => {
                 {selectedStage && candidatures.length > 0 && (
                     <div className="search-container">
                         <div className="search-box">
-                            <svg className="search-icon" viewBox="0 0 24 24">
-                                <circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" strokeWidth="2"/>
-                                <path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2"/>
-                            </svg>
                             <input
                                 type="text"
                                 placeholder="Rechercher par nom ou statut..."
@@ -254,10 +272,9 @@ const EntrepriseCandidatures = () => {
                 <div className="candidatures-list">
                     {filteredCandidatures.length > 0 ? (
                         filteredCandidatures.map(candidature => (
-                            <div key={candidature.id} className="candidature-card">
-                                <div className="candidature-header">
+                            <div key={candidature.id} className="candidature-card">                                <div className="candidature-header">
                                     <div className="candidature-title">
-                                        <h3>{candidature.etudiant.nom} {candidature.etudiant.prenom}</h3>
+                                        <h3>{candidature.etudiant.user.nom} {candidature.etudiant.user.prenom}</h3>
                                         <span className="candidature-date">
                                             Postulé le {new Date(candidature.datePostulation).toLocaleDateString('fr-FR')}
                                         </span>
@@ -271,7 +288,7 @@ const EntrepriseCandidatures = () => {
                                 <div className="candidature-details">
                                     <div className="detail-item">
                                         <strong>Email:</strong> 
-                                        <span>{candidature.etudiant.email}</span>
+                                        <span>{candidature.etudiant.user.email}</span>
                                     </div>
                                     <div className="detail-item">
                                         <strong>CV:</strong> 

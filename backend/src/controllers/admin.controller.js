@@ -161,3 +161,80 @@ exports.getUserDetails = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
+// Get all candidatures for admin
+exports.getAllCandidatures = async (req, res) => {
+    try {
+        const candidatures = await Candidature.findAll({
+            include: [
+                {
+                    model: Stage,
+                    as: 'stage',
+                    attributes: ['id', 'titre', 'description', 'dateDebut', 'dateFin', 'status'],
+                    include: [{
+                        model: db.entreprise,
+                        as: 'entreprise',
+                        attributes: ['id', 'nom', 'secteur']
+                    }]
+                },
+                {
+                    model: db.etudiant,
+                    as: 'etudiant',
+                    attributes: ['id', 'niveau', 'filiere', 'cv', 'lettreMotivation'],
+                    include: [{
+                        model: db.user,
+                        as: 'user',
+                        attributes: ['id', 'nom', 'prenom', 'email']
+                    }]
+                }
+            ],
+            order: [['datePostulation', 'DESC']]
+        });
+        
+        res.status(200).json(candidatures);
+    } catch (err) {
+        console.error('Error getting all candidatures:', err);
+        res.status(500).json({ message: err.message });
+    }
+};
+
+// Get all stages for admin
+exports.getAllStages = async (req, res) => {
+    try {
+        const stages = await Stage.findAll({
+            include: [
+                {
+                    model: db.entreprise,
+                    as: 'entreprise',
+                    attributes: ['id', 'nom', 'secteur'],
+                    include: [{
+                        model: db.user,
+                        as: 'user',
+                        attributes: ['nom', 'prenom', 'email']
+                    }]
+                },
+                {
+                    model: Candidature,
+                    as: 'candidatures',
+                    attributes: ['id', 'status', 'datePostulation'],
+                    include: [{
+                        model: db.etudiant,
+                        as: 'etudiant',
+                        attributes: ['niveau', 'filiere'],
+                        include: [{
+                            model: db.user,
+                            as: 'user',
+                            attributes: ['nom', 'prenom', 'email']
+                        }]
+                    }]
+                }
+            ],
+            order: [['createdAt', 'DESC']]
+        });
+        
+        res.status(200).json(stages);
+    } catch (err) {
+        console.error('Error getting all stages:', err);
+        res.status(500).json({ message: err.message });
+    }
+};

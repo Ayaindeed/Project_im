@@ -32,64 +32,124 @@ const AdminUsers = () => {
       setError(err.response?.data?.message || "Erreur lors du changement de statut");
     }
   };
-
   return (
     <div className="admin-users-container">
-      <h2>Gestion des Utilisateurs</h2>
+      <div className="section-header">
+        <div className="section-title">
+          <h2>Gestion des comptes utilisateurs</h2>
+          <p className="section-subtitle">Gérez les utilisateurs et leurs permissions</p>
+        </div>
+      </div>
       
       {error && <div className="error-message">{error}</div>}
       
       {isLoading ? (
         <div className="loading">Chargement...</div>
       ) : (
-        <table className="admin-users-table">
-          <thead>
-            <tr>
-              <th>Utilisateur</th>
-              <th>Email</th>
-              <th>Rôle</th>
-              <th>Date d'inscription</th>
-              <th>Statut</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map(u => (
-              <tr key={u.id}>
-                <td>
-                  <strong>{u.nom} {u.prenom}</strong>
-                </td>
-                <td>{u.email}</td>
-                <td>
-                  <span className={`role-badge role-${u.role}`}>
-                    {u.role === 'admin' ? 'Administrateur' : 
-                     u.role === 'entreprise' ? 'Entreprise' : 'Étudiant'}
-                  </span>
-                </td>
-                <td>
-                  <span className="registration-date">
-                    {new Date(u.dateInscription).toLocaleDateString()}
-                  </span>
-                </td>
-                <td>
-                  <span className={`status-badge ${u.actif ? 'status-active' : 'status-inactive'}`}>
-                    {u.actif ? 'Actif' : 'Inactif'}
-                  </span>
-                </td>                <td>
-                  <button 
-                    onClick={() => handleToggle(u.id)} 
-                    className={`status-toggle ${u.actif ? 'deactivate' : 'activate'}`}
-                  >
-                    {u.actif ? 'Désactiver' : 'Activer'}
-                  </button>
-                  <Link to={`/admin-user/${u.id}`} className="details-button">
-                    Détails
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="users-table-container">
+          <div className="table-wrapper">
+            <table className="enhanced-table">
+              <thead>
+                <tr>
+                  <th>
+                    <div className="th-content">
+                      <i className="fas fa-user"></i>
+                      Utilisateur
+                    </div>
+                  </th>
+                  <th>
+                    <div className="th-content">
+                      <i className="fas fa-envelope"></i>
+                      Email
+                    </div>
+                  </th>
+                  <th>
+                    <div className="th-content">
+                      <i className="fas fa-tag"></i>
+                      Rôle
+                    </div>
+                  </th>
+                  <th>
+                    <div className="th-content">
+                      <i className="fas fa-calendar"></i>
+                      Date d'inscription
+                    </div>
+                  </th>
+                  <th>
+                    <div className="th-content">
+                      <i className="fas fa-toggle-on"></i>
+                      Statut
+                    </div>
+                  </th>
+                  <th>
+                    <div className="th-content">
+                      <i className="fas fa-cogs"></i>
+                      Actions
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map(user => (
+                  <tr key={user.id} className="table-row">
+                    <td>
+                      <div className="user-info">
+                        <div className="user-avatar">
+                          {user.nom?.[0]}{user.prenom?.[0]}
+                        </div>
+                        <div className="user-details">
+                          <span className="user-name">{user.nom} {user.prenom}</span>
+                          <span className="user-id">ID: {user.id}</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span className="user-email">{user.email}</span>
+                    </td>
+                    <td>
+                      <span className={`role-badge enhanced-badge role-${user.role}`}>
+                        <i className={`fas ${user.role === 'admin' ? 'fa-crown' : 
+                          user.role === 'entreprise' ? 'fa-building' : 'fa-graduation-cap'}`}></i>
+                        {user.role === 'admin' ? 'Admin' : 
+                        user.role === 'entreprise' ? 'Entreprise' : 'Étudiant'}
+                      </span>
+                    </td>                    <td>
+                      <span className="registration-date">
+                        {new Date(user.dateInscription).toLocaleDateString()}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`status-badge enhanced-status ${user.actif ? 'active' : 'inactive'}`}>
+                        <div className="status-indicator"></div>
+                        {user.actif ? 'Actif' : 'Inactif'}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="action-buttons">
+                        <button
+                          onClick={() => handleToggle(user.id)}
+                          className={`action-btn ${user.actif ? 'btn-danger' : 'btn-success'}`}
+                          title={user.actif ? 'Désactiver l\'utilisateur' : 'Activer l\'utilisateur'}
+                        >
+                          <i className={`fas ${user.actif ? 'fa-ban' : 'fa-check'}`}></i>
+                          {user.actif ? 'Désactiver' : 'Activer'}
+                        </button>
+                        <Link 
+                          to={`/admin-user/${user.id}`} 
+                          className="action-btn btn-info"
+                          title="Voir les détails de l'utilisateur"
+                        >
+                          <i className="fas fa-eye"></i>
+                          Détails
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       )}
     </div>
   );

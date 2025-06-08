@@ -202,6 +202,8 @@ router.use((req, res, next) => {
 router.get('/users', adminController.getAllUsers);
 router.get('/users/:id/details', adminController.getUserDetails);
 router.get('/stages/stats', adminController.getStageStats);
+router.get('/stages', adminController.getAllStages);
+router.get('/candidatures', adminController.getAllCandidatures);
 router.put('/users/:id/toggle', adminController.toggleUserActivation);
 
 module.exports = router;

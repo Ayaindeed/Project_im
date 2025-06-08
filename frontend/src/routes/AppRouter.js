@@ -16,6 +16,8 @@ import AdminRegister from '../components/Auth/AdminRegister';
 import AdminDashboard from '../pages/AdminDashboard';
 import AdminUsers from '../pages/AdminUsers';
 import AdminUserDetail from '../pages/AdminUserDetail';
+import AdminStages from '../pages/AdminStages';
+import AdminCandidatures from '../pages/AdminCandidatures';
 import Profile from '../pages/Profile';
 import EntrepriseDashboard from '../pages/EntrepriseDashboard';
 
@@ -122,6 +124,26 @@ const AppRouter = () => {
                 ) : (
                   <Redirect to="/dashboard" />
                 )
+              ) : (
+                <Login {...props} />
+              )
+            }
+          />
+          <Route 
+            path="/admin-login" 
+            render={props => 
+              auth.isAuthenticated && auth.user?.role === 'admin' ? (
+                <Redirect to="/admin-dashboard" />
+              ) : (
+                <Login {...props} />
+              )
+            }
+          />
+          <Route 
+            path="/entreprise-login" 
+            render={props => 
+              auth.isAuthenticated && auth.user?.role === 'entreprise' ? (
+                <Redirect to="/entreprise-dashboard" />
               ) : (
                 <Login {...props} />
               )
@@ -234,6 +256,26 @@ const AppRouter = () => {
             render={props => 
               auth.isAuthenticated && auth.user?.role === 'admin' ? (
                 <AdminUserDetail {...props} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route 
+            path="/admin-stages"
+            render={props => 
+              auth.isAuthenticated && auth.user?.role === 'admin' ? (
+                <AdminStages {...props} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route 
+            path="/admin-candidatures"
+            render={props => 
+              auth.isAuthenticated && auth.user?.role === 'admin' ? (
+                <AdminCandidatures {...props} />
               ) : (
                 <Redirect to="/login" />
               )

@@ -23,6 +23,16 @@ export const getStageStats = async () => {
 export const toggleUserStatus = async (userId) => {
     try {
         const response = await api.put(`/admin/users/${userId}/toggle`);
+        
+        // Déclencher les événements de synchronisation
+        window.dispatchEvent(new CustomEvent('adminNotification', {
+            detail: { type: 'user_status_changed', data: response.data }
+        }));
+        
+        window.dispatchEvent(new CustomEvent('adminDataSync', {
+            detail: { timestamp: new Date().toISOString() }
+        }));
+        
         return response.data;
     } catch (error) {
         console.error('Error toggling user status:', error);

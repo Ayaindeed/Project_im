@@ -268,10 +268,9 @@ const EntrepriseStages = () => {
             filteredStages.map(stage => (
               <div key={stage.id} className="stage-offer-card">
                 <div className="stage-card-header">
-                  <h3 className="stage-title">{stage.titre}</h3>
-                  <div className="stage-actions">
+                  <h3 className="stage-title">{stage.titre}</h3>                  <div className="stage-actions">
                     <button 
-                      className="action-btn edit-btn"
+                      className="stage-edit-btn"
                       onClick={() => handleEdit(stage)}
                       title="Modifier l'offre"
                     >
@@ -281,7 +280,7 @@ const EntrepriseStages = () => {
                       </svg>
                     </button>
                     <button 
-                      className="action-btn delete-btn"
+                      className="stage-delete-btn"
                       onClick={() => handleDelete(stage.id)}
                       title="Supprimer l'offre"
                     >
