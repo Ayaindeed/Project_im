@@ -22,24 +22,6 @@ npm install
 npm start
 ```
 
-## Structure des utilisateurs
-
-### Espace Étudiant
-- Consultation des offres de stages disponibles
-- Soumission de candidatures avec CV et lettre de motivation
-- Suivi de l'état des candidatures
-
-### Espace Entreprise
-- Publication et gestion des offres de stages
-- Traitement des candidatures reçues (accepter/refuser)
-- Visualisation des statistiques des stages proposés
-
-### Espace Administration
-- Gestion des comptes utilisateurs
-- Activation/désactivation des comptes
-- Consultation des statistiques globales
-- Affectation des étudiants aux entreprises
-
 ## Notes techniques
 
 - Le backend est développé avec Express.js et Sequelize (ORM)
